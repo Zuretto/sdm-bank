@@ -1,8 +1,12 @@
 package put.poznan.account;
 
+import put.poznan.transaction.HistoryOfTransactions;
+
 import java.math.BigDecimal;
 
 public class Account {
+
+    private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
 
     private BigDecimal balance;
 

@@ -3,6 +3,11 @@ package put.poznan.transaction;
 public abstract class Transaction {
 
     private boolean wasExecuteCalled = false;
+    private final HistoryOfTransactions historyToWriteInto;
+
+    protected Transaction(HistoryOfTransactions historyOfTransactions) {
+        this.historyToWriteInto = historyOfTransactions;
+    }
 
     /**
      * Execute method.
@@ -14,6 +19,7 @@ public abstract class Transaction {
         }
         this.executeImplementation();
         wasExecuteCalled = true;
+        historyToWriteInto.addTransaction(this);
     }
 
     /**
