@@ -8,14 +8,20 @@ import java.time.LocalDate;
 public class Deposit {
 
     private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
+    private final Account account;
     private InterestRate interestRate;
     private BigDecimal amount;
     private LocalDate endDate;
 
-    public Deposit(InterestRate interestRate, LocalDate endDate) {
+    public Deposit(InterestRate interestRate, LocalDate endDate, Account account) {
         this.interestRate = interestRate;
         this.amount = BigDecimal.ZERO;
         this.endDate = endDate;
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
     }
 
     public HistoryOfTransactions getHistoryOfTransactions() {

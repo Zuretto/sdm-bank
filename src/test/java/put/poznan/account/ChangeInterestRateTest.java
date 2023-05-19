@@ -2,6 +2,7 @@ package put.poznan.account;
 
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ class ChangeInterestRateTest {
     @Test
     void shouldChangeInterestRateForDeposit() {
         // given
-        Deposit deposit = new Deposit(new InterestRate(BigDecimal.ONE, 10), LocalDate.of(2020, 1, 1));
+        Deposit deposit = new Deposit(new InterestRate(BigDecimal.ONE, 10), LocalDate.of(2020, 1, 1), Mockito.mock(Account.class));
         InterestRate newInterestRate = new InterestRate(BigDecimal.TEN, 20);
         Transaction changeInterestRate = ChangeInterestRate.createChangeInterestRateTransaction(deposit, newInterestRate);
         // when
@@ -27,7 +28,7 @@ class ChangeInterestRateTest {
     @Test
     void shouldChangeInterestRateForLoan() {
         // given
-        Loan loan = new Loan(new InterestRate(BigDecimal.ONE, 10), LocalDate.of(2020, 1, 1));
+        Loan loan = new Loan(new InterestRate(BigDecimal.ONE, 10), LocalDate.of(2020, 1, 1), Mockito.mock(Account.class));
         InterestRate newInterestRate = new InterestRate(BigDecimal.TEN, 20);
         Transaction changeInterestRate = ChangeInterestRate.createChangeInterestRateTransaction(loan, newInterestRate);
         // when
