@@ -18,9 +18,12 @@ public class ClassicAccount implements Account {
     private Person person;
     private final List<Deposit> deposits;
     private final List<Loan> loans;
+    private final String accountNumber;
 
-    public ClassicAccount(Person person) {
+
+    public ClassicAccount(Person person, String accountNumber) {
         this.person = person;
+        this.accountNumber = accountNumber;
         this.balance = new BigDecimal(0);
         this.deposits = new ArrayList<>();
         this.loans = new ArrayList<>();
@@ -144,5 +147,10 @@ public class ClassicAccount implements Account {
 
     public String accept(Visitor visitor) {
         return visitor.visitAccount(this);
+    }
+
+    @Override
+    public String getAccountNumber() {
+        return accountNumber;
     }
 }

@@ -108,4 +108,9 @@ public class AccountDecorator implements Account {
     public String accept(Visitor visitor) {
         return wrappedAccount.accept(visitor);
     }
+
+    @Override
+    public String getAccountNumber() {
+        return wrappedAccount.getAccountNumber();
+    }
 }
