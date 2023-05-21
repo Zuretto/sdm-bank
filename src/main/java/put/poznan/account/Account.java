@@ -74,8 +74,21 @@ public class Account {
         transaction.execute();
     }
 
+    /**
+     * Closes given deposit.
+     * @param deposit deposit to be closed.
+     */
     public void closeDeposit(Deposit deposit) {
         Transaction transaction = new CloseDeposit(this, deposit);
+        transaction.execute();
+    }
+
+    /**
+     * Repays loan.
+     * @param loan loan to be repaid.
+     */
+    public void repayLoan(Loan loan) {
+        Transaction transaction = new RepayLoan(this, loan);
         transaction.execute();
     }
 
