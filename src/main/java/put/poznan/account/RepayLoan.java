@@ -1,0 +1,29 @@
+package put.poznan.account;
+
+import put.poznan.transaction.Transaction;
+
+import java.math.BigDecimal;
+
+public class RepayLoan extends Transaction {
+
+    private final Account account;
+    private final Loan loan;
+
+    public RepayLoan(Account account, Loan loan) {
+        super(account.getHistoryOfTransactions());
+        this.account = account;
+        this.loan = loan;
+    }
+
+    @Override
+    protected void executeImplementation() {
+        BigDecimal loanAmountAndInterest = loan.getAmount()
+                .add(loan.getInterestRate().calculateInterest(loan.getAmount(), loan.getStartDate(), loan.getEndDate()));
+        if (!account.hasFunds(loanAmountAndInterest)) {
+            throw new IllegalStateException("Could not repay loan - insufficient funds.");
+        }
+        BigDecimal newAccountBalance = account.getBalance().subtract(loanAmountAndInterest);
+        account.setBalance(newAccountBalance);
+        account.removeLoan(loan);
+    }
+}
