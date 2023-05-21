@@ -1,5 +1,6 @@
 package put.poznan.transaction;
 
+// TODO transaction type, description, date of execution
 public abstract class Transaction {
 
     private boolean wasExecuteCalled = false;
@@ -17,7 +18,13 @@ public abstract class Transaction {
         if (wasExecuteCalled) {
             throw new IllegalStateException(String.format("%s Transaction was already executed.", getClass().getName()));
         }
-        this.executeImplementation();
+        try {
+            this.executeImplementation();
+        } catch (Exception exception) {
+            wasExecuteCalled = true;
+            historyToWriteInto.addTransaction(new FailedTransaction(historyToWriteInto, this, exception));
+            throw exception;
+        }
         wasExecuteCalled = true;
         historyToWriteInto.addTransaction(this);
     }

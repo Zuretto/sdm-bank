@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.HistoryOfTransactions;
+import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,6 +21,11 @@ public class Account {
         this.balance = new BigDecimal(0);
         this.deposits = new ArrayList<>();
         this.loans = new ArrayList<>();
+    }
+
+    public void withdrawMoney(BigDecimal moneyToBeWithdrawn) {
+        Transaction withdrawMoneyTransaction = new WithdrawMoney(historyOfTransactions, this, moneyToBeWithdrawn);
+        withdrawMoneyTransaction.execute();
     }
 
     public void openDeposit() {
@@ -44,5 +50,9 @@ public class Account {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public boolean canMoneyBeWithdrawn(BigDecimal moneyToBeWithdrawn) {
+        return balance.compareTo(moneyToBeWithdrawn) >= 0;
     }
 }

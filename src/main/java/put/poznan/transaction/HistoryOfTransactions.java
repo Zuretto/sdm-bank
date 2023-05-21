@@ -15,7 +15,7 @@ public class HistoryOfTransactions {
         return Collections.unmodifiableList(transactions);
     }
 
-    public void addTransaction(Transaction transaction) {
+    void addTransaction(Transaction transaction) {
         if (!transaction.isExecuted()) {
             throw new IllegalStateException("Transaction was not executed and should not be part of History.");
         }
