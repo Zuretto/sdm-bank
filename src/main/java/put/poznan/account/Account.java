@@ -74,12 +74,25 @@ public class Account {
         transaction.execute();
     }
 
+    public void closeDeposit(Deposit deposit) {
+        Transaction transaction = new CloseDeposit(this, deposit);
+        transaction.execute();
+    }
+
     void addDeposit(Deposit deposit) {
         this.deposits.add(deposit);
     }
 
     void addLoan(Loan loan) {
         this.loans.add(loan);
+    }
+
+    void removeLoan(Loan loan) {
+        this.loans.remove(loan);
+    }
+
+    void removeDeposit(Deposit deposit) {
+        this.deposits.remove(deposit);
     }
 
     public List<Deposit> getDeposits() {
