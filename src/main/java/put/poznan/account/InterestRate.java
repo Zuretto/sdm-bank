@@ -26,6 +26,14 @@ public class InterestRate {
         return interestPeriod;
     }
 
+    /**
+     * Calculates linear interest based on given amount, from- and to dates, rate and interest period (kept as class values).
+     *
+     * @param amount amount on which the interest is calculated
+     * @param from   date from which the interest is started
+     * @param to     date to which the interest should be calculated
+     * @return calculated interest
+     */
     public BigDecimal calculateInterest(final BigDecimal amount,
                                         final LocalDate from,
                                         final LocalDate to) {

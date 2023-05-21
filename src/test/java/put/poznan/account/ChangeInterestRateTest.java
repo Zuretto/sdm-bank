@@ -32,7 +32,13 @@ class ChangeInterestRateTest {
     @Test
     void shouldChangeInterestRateForLoan() {
         // given
-        Loan loan = new Loan(new InterestRate(BigDecimal.ONE, 10), LocalDate.of(2020, 1, 1), Mockito.mock(Account.class));
+        Loan loan = new Loan(
+                new InterestRate(BigDecimal.ONE, 10),
+                LocalDate.of(2020, 1, 1),
+                LocalDate.of(2024, 1, 1),
+                Mockito.mock(Account.class),
+                BigDecimal.TEN
+        );
         InterestRate newInterestRate = new InterestRate(BigDecimal.TEN, 20);
         Transaction changeInterestRate = ChangeInterestRate.createChangeInterestRateTransaction(loan, newInterestRate);
         // when

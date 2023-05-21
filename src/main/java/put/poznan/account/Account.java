@@ -52,8 +52,26 @@ public class Account {
         transaction.execute();
     }
 
-    public void openLoan() {
-        // TODO...
+    /**
+     * Opening a loan adds money to the balance.
+     *
+     * @param loanAmount amount that is to be loaned
+     * @param endDate             end date of the deposit
+     * @param rateOfInterest      interest rate of the deposit
+     * @param interestPeriod      interest period of the deposit
+     */
+    public void openLoan(BigDecimal loanAmount,
+                         LocalDate endDate,
+                         BigDecimal rateOfInterest,
+                         int interestPeriod) {
+        Transaction transaction = new OpenLoan(
+                this,
+                loanAmount,
+                endDate,
+                rateOfInterest,
+                interestPeriod
+        );
+        transaction.execute();
     }
 
     void addDeposit(Deposit deposit) {

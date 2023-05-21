@@ -8,16 +8,19 @@ import java.time.LocalDate;
 public class Loan {
 
     private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
-    private Account account;
+    private final Account account;
     private InterestRate interestRate;
-    private BigDecimal amount;
+    private final BigDecimal amount;
+
+    private LocalDate startDate;
     private LocalDate endDate;
 
-    public Loan(InterestRate interestRate, LocalDate endDate, Account account) {
+    public Loan(InterestRate interestRate, LocalDate startDate, LocalDate endDate, Account account, BigDecimal depositAmount) {
         this.interestRate = interestRate;
-        this.amount = BigDecimal.ZERO;
+        this.startDate = startDate;
         this.endDate = endDate;
         this.account = account;
+        this.amount = depositAmount;
     }
 
     public HistoryOfTransactions getHistoryOfTransactions() {
@@ -40,8 +43,12 @@ public class Loan {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     public LocalDate getEndDate() {
