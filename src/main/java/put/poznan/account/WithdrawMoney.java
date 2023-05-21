@@ -1,6 +1,5 @@
 package put.poznan.account;
 
-import put.poznan.transaction.HistoryOfTransactions;
 import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
@@ -10,10 +9,9 @@ public class WithdrawMoney extends Transaction {
     private final Account account;
     private final BigDecimal withdrawAmount;
 
-    public WithdrawMoney(HistoryOfTransactions historyOfTransactions,
-                         Account account,
+    public WithdrawMoney(Account account,
                          BigDecimal withdrawAmount) {
-        super(historyOfTransactions);
+        super(account.getHistoryOfTransactions());
         this.account = account;
         this.withdrawAmount = withdrawAmount;
     }
@@ -24,7 +22,7 @@ public class WithdrawMoney extends Transaction {
      */
     @Override
     protected void executeImplementation() {
-        if (!account.canMoneyBeWithdrawn(withdrawAmount)) {
+        if (!account.hasFunds(withdrawAmount)) {
             throw new IllegalStateException("can not withdraw such money from the account!");
         }
         final BigDecimal newAccountBalance = account.getBalance().subtract(withdrawAmount);

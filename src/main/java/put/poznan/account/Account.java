@@ -4,7 +4,9 @@ import put.poznan.transaction.HistoryOfTransactions;
 import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Account {
@@ -24,16 +26,50 @@ public class Account {
     }
 
     public void withdrawMoney(BigDecimal moneyToBeWithdrawn) {
-        Transaction withdrawMoneyTransaction = new WithdrawMoney(historyOfTransactions, this, moneyToBeWithdrawn);
+        Transaction withdrawMoneyTransaction = new WithdrawMoney(this, moneyToBeWithdrawn);
         withdrawMoneyTransaction.execute();
     }
 
-    public void openDeposit() {
-        // TODO...
+    /**
+     * Opening a deposit takes part of the money from balance and puts it in the deposit.
+     *
+     * @param amountToBeDeposited amount of money to be deposited
+     * @param endDate             end date of the deposit
+     * @param rateOfInterest      interest rate of the deposit
+     * @param interestPeriod      interest period of the deposit
+     */
+    public void openDeposit(BigDecimal amountToBeDeposited,
+                            LocalDate endDate,
+                            BigDecimal rateOfInterest,
+                            int interestPeriod) {
+        Transaction transaction = new OpenDeposit(
+                this,
+                amountToBeDeposited,
+                endDate,
+                rateOfInterest,
+                interestPeriod
+        );
+        transaction.execute();
     }
 
     public void openLoan() {
         // TODO...
+    }
+
+    void addDeposit(Deposit deposit) {
+        this.deposits.add(deposit);
+    }
+
+    void addLoan(Loan loan) {
+        this.loans.add(loan);
+    }
+
+    public List<Deposit> getDeposits() {
+        return Collections.unmodifiableList(deposits);
+    }
+
+    public List<Loan> getLoans() {
+        return Collections.unmodifiableList(loans);
     }
 
     public BigDecimal getBalance() {
@@ -48,11 +84,16 @@ public class Account {
         return person;
     }
 
+    HistoryOfTransactions getHistoryOfTransactions() {
+        return historyOfTransactions;
+    }
+
     public void setPerson(Person person) {
         this.person = person;
     }
 
-    public boolean canMoneyBeWithdrawn(BigDecimal moneyToBeWithdrawn) {
+    // method created so that it may be overridden in DebitAccount and everything should work OK with the transactions.
+    public boolean hasFunds(BigDecimal moneyToBeWithdrawn) {
         return balance.compareTo(moneyToBeWithdrawn) >= 0;
     }
 }

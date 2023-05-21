@@ -19,7 +19,7 @@ class AccountTest {
         Account account = new Account(Mockito.mock(Person.class));
         account.setBalance(accountsBalance);
         // when
-        boolean result = account.canMoneyBeWithdrawn(moneyToBeWithdrawn);
+        boolean result = account.hasFunds(moneyToBeWithdrawn);
         // then
         assertThat(result).isEqualTo(expectedResult);
     }
