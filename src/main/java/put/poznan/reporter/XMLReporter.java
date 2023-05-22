@@ -1,9 +1,6 @@
 package put.poznan.reporter;
 
-import put.poznan.account.Account;
-import put.poznan.account.Deposit;
-import put.poznan.account.Loan;
-import put.poznan.account.Person;
+import put.poznan.account.*;
 
 public class XMLReporter implements Visitor {
     public String export(Account... args) {
@@ -32,6 +29,16 @@ public class XMLReporter implements Visitor {
             sb.append(loan.accept(this)).append("\n");
         }
         sb.append("        </loans>" + "\n");
+        sb.append("        <payments>" + "\n");
+        for (Object transaction : account.getHistoryOfTransactions().getTransactions()) {
+            if (transaction instanceof MakePayment) {
+                sb.append(((MakePayment) transaction).accept(this)).append("\n");
+            }
+            if (transaction instanceof ReceivePayment) {
+                sb.append(((ReceivePayment) transaction).accept(this)).append("\n");
+            }
+        }
+        sb.append("        </payments>" + "\n");
         sb.append("    </account>");
         return sb.toString();
     }
@@ -61,6 +68,25 @@ public class XMLReporter implements Visitor {
                 "            <phoneNumber>" + person.getPhoneNumber() + "</phoneNumber>" + "\n" +
                 "            <email>" + person.getEmail() + "</email>" + "\n" +
                 "        </owner>";
+    }
+
+    @Override
+    public String visitMakePayment(MakePayment payment) {
+        return  "           <payment>" + "\n" +
+                "               <sender>" + payment.getSenderAccount().getAccountNumber() + "</sender>" + "\n" +
+                "               <receiver>" + payment.getReceiverAccountNumber()+ "</phoneNumber>" + "\n" +
+                "               <amount>" + payment.getAmount() + "</email>" + "\n" +
+                "               <status>" + payment.getStatus() + "</status>" + "\n" +
+                "           </payment>";
+    }
+
+    @Override
+    public String visitReceivePayment(ReceivePayment payment) {
+        return  "           <payment>" + "\n" +
+                "               <sender>" + payment.getFromAccountNumber() + "</sender>" + "\n" +
+                "               <receiver>" + payment.getToAccount().getAccountNumber() + "</phoneNumber>" + "\n" +
+                "               <amount>" + payment.getAmount() + "</email>" + "\n" +
+                "           </payment>";
     }
 
 }

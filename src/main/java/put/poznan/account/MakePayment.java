@@ -4,6 +4,7 @@ import put.poznan.Bank;
 import put.poznan.interbank.InterBankPayment;
 import put.poznan.interbank.InterbankPaymentAgency;
 import put.poznan.interbank.PaymentStatus;
+import put.poznan.reporter.Visitor;
 import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
@@ -15,6 +16,22 @@ public class MakePayment extends Transaction {
     private final String receiverAccountNumber;
     private final InterbankPaymentAgency interbankPaymentAgency;
     private PaymentStatus status = PaymentStatus.PENDING;
+
+    public Account getSenderAccount() {
+        return senderAccount;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String getReceiverAccountNumber() {
+        return receiverAccountNumber;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
 
     public MakePayment(Bank senderBank, Account senderAccount, BigDecimal amount, String receiverAccountNumber, InterbankPaymentAgency interbankPaymentAgency) {
         super(senderAccount.getHistoryOfTransactions());
@@ -77,5 +94,9 @@ public class MakePayment extends Transaction {
                         },
                         () -> status = PaymentStatus.ACCOUNT_NOT_FOUND
                 );
+    }
+
+    public String accept(Visitor visitor) {
+        return visitor.visitMakePayment(this);
     }
 }

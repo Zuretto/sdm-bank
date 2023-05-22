@@ -1,5 +1,6 @@
 package put.poznan.account;
 
+import put.poznan.reporter.Visitor;
 import put.poznan.transaction.HistoryOfTransactions;
 import put.poznan.transaction.Transaction;
 
@@ -20,5 +21,21 @@ public class ReceivePayment extends Transaction {
     @Override
     protected void executeImplementation() {
         toAccount.setBalance(toAccount.getBalance().add(amount));
+    }
+
+    public String getFromAccountNumber() {
+        return fromAccountNumber;
+    }
+
+    public Account getToAccount() {
+        return toAccount;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String accept(Visitor visitor) {
+        return visitor.visitReceivePayment(this);
     }
 }
