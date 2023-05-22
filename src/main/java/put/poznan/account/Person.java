@@ -1,5 +1,7 @@
 package put.poznan.account;
 
+import put.poznan.reporter.Visitor;
+
 public class Person {
 
     private String name;
@@ -34,5 +36,9 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String accept(Visitor visitor) {
+        return visitor.visitPerson(this);
     }
 }

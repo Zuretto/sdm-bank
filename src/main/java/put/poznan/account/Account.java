@@ -1,143 +1,56 @@
 package put.poznan.account;
 
+import put.poznan.reporter.Visitor;
 import put.poznan.transaction.HistoryOfTransactions;
-import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class Account {
+public interface Account {
+    void withdrawMoney(BigDecimal moneyToBeWithdrawn);
 
-    private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
+    void openDeposit(
+            BigDecimal amountToBeDeposited,
+            LocalDate endDate,
+            BigDecimal rateOfInterest,
+            int interestPeriod
+    );
 
-    private BigDecimal balance;
-    private Person person;
-    private final List<Deposit> deposits;
-    private final List<Loan> loans;
+    void openLoan(
+            BigDecimal loanAmount,
+            LocalDate endDate,
+            BigDecimal rateOfInterest,
+            int interestPeriod
+    );
 
-    public Account(Person person) {
-        this.person = person;
-        this.balance = new BigDecimal(0);
-        this.deposits = new ArrayList<>();
-        this.loans = new ArrayList<>();
-    }
+    void closeDeposit(Deposit deposit);
 
-    public void withdrawMoney(BigDecimal moneyToBeWithdrawn) {
-        Transaction withdrawMoneyTransaction = new WithdrawMoney(this, moneyToBeWithdrawn);
-        withdrawMoneyTransaction.execute();
-    }
+    void repayLoan(Loan loan);
 
-    /**
-     * Opening a deposit takes part of the money from balance and puts it in the deposit.
-     *
-     * @param amountToBeDeposited amount of money to be deposited
-     * @param endDate             end date of the deposit
-     * @param rateOfInterest      interest rate of the deposit
-     * @param interestPeriod      interest period of the deposit
-     */
-    public void openDeposit(BigDecimal amountToBeDeposited,
-                            LocalDate endDate,
-                            BigDecimal rateOfInterest,
-                            int interestPeriod) {
-        Transaction transaction = new OpenDeposit(
-                this,
-                amountToBeDeposited,
-                endDate,
-                rateOfInterest,
-                interestPeriod
-        );
-        transaction.execute();
-    }
+    void addDeposit(Deposit deposit);
 
-    /**
-     * Opening a loan adds money to the balance.
-     *
-     * @param loanAmount amount that is to be loaned
-     * @param endDate             end date of the deposit
-     * @param rateOfInterest      interest rate of the deposit
-     * @param interestPeriod      interest period of the deposit
-     */
-    public void openLoan(BigDecimal loanAmount,
-                         LocalDate endDate,
-                         BigDecimal rateOfInterest,
-                         int interestPeriod) {
-        Transaction transaction = new OpenLoan(
-                this,
-                loanAmount,
-                endDate,
-                rateOfInterest,
-                interestPeriod
-        );
-        transaction.execute();
-    }
+    void addLoan(Loan loan);
 
-    /**
-     * Closes given deposit.
-     * @param deposit deposit to be closed.
-     */
-    public void closeDeposit(Deposit deposit) {
-        Transaction transaction = new CloseDeposit(this, deposit);
-        transaction.execute();
-    }
+    void removeLoan(Loan loan);
 
-    /**
-     * Repays loan.
-     * @param loan loan to be repaid.
-     */
-    public void repayLoan(Loan loan) {
-        Transaction transaction = new RepayLoan(this, loan);
-        transaction.execute();
-    }
+    void removeDeposit(Deposit deposit);
 
-    void addDeposit(Deposit deposit) {
-        this.deposits.add(deposit);
-    }
+    List<Deposit> getDeposits();
 
-    void addLoan(Loan loan) {
-        this.loans.add(loan);
-    }
+    List<Loan> getLoans();
 
-    void removeLoan(Loan loan) {
-        this.loans.remove(loan);
-    }
+    BigDecimal getBalance();
 
-    void removeDeposit(Deposit deposit) {
-        this.deposits.remove(deposit);
-    }
+    void setBalance(BigDecimal balance);
 
-    public List<Deposit> getDeposits() {
-        return Collections.unmodifiableList(deposits);
-    }
+    Person getPerson();
 
-    public List<Loan> getLoans() {
-        return Collections.unmodifiableList(loans);
-    }
+    HistoryOfTransactions getHistoryOfTransactions();
 
-    public BigDecimal getBalance() {
-        return balance;
-    }
+    void setPerson(Person person);
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
+    boolean hasFunds(BigDecimal moneyToBeWithdrawn);
 
-    public Person getPerson() {
-        return person;
-    }
-
-    HistoryOfTransactions getHistoryOfTransactions() {
-        return historyOfTransactions;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    // method created so that it may be overridden in DebitAccount and everything should work OK with the transactions.
-    public boolean hasFunds(BigDecimal moneyToBeWithdrawn) {
-        return balance.compareTo(moneyToBeWithdrawn) >= 0;
-    }
+    String accept(Visitor visitor);
 }

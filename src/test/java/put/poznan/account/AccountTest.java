@@ -16,12 +16,17 @@ class AccountTest {
     @MethodSource("provideCanMoneyBeWithdrawnTests")
     void testCanMoneyBeWithdrawnMethod(BigDecimal accountsBalance, BigDecimal moneyToBeWithdrawn, boolean expectedResult) {
         // given
-        Account account = new Account(Mockito.mock(Person.class));
-        account.setBalance(accountsBalance);
+        Account classicAccount = new ClassicAccount(Mockito.mock(Person.class));
+        Account debitAccount = new DebitAccount(classicAccount);
+
+        classicAccount.setBalance(accountsBalance);
+        debitAccount.setBalance(accountsBalance);
         // when
-        boolean result = account.hasFunds(moneyToBeWithdrawn);
+        boolean classicAccountResult = classicAccount.hasFunds(moneyToBeWithdrawn);
+        boolean debitAccountResult = debitAccount.hasFunds(moneyToBeWithdrawn);
         // then
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(classicAccountResult).isEqualTo(expectedResult);
+        assertThat(debitAccountResult).isEqualTo(true);
     }
 
     public static Stream<Arguments> provideCanMoneyBeWithdrawnTests() {
