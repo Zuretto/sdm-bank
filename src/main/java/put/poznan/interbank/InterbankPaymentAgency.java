@@ -24,6 +24,11 @@ public class InterbankPaymentAgency {
     public void processPayments() {
         payments.forEach(data -> {
             final var receiverBank = banks.get(data.payment.getReceiverAccountNumber().substring(0, 4));
+            if (receiverBank == null) {
+                data.fromBank.paymentFailed(data.payment);
+                data.callback.paymentFailed(PaymentStatus.ACCOUNT_NOT_FOUND);
+                return;
+            }
             final var result = receiverBank.processPayment(data.payment);
             switch (result) {
                 case COMPLETED -> {
