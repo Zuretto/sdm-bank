@@ -2,19 +2,21 @@ package put.poznan.account;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import put.poznan.transaction.FailedTransaction;
 import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class OpenDepositTest {
 
     @Test
     void shouldOpenDeposit() {
         // given
-        Account account = new Account(Mockito.mock(Person.class));
+        Account account = new ClassicAccount(Mockito.mock(Person.class));
         account.setBalance(new BigDecimal("1000"));
         Transaction transaction = new OpenDeposit(
                 account,
@@ -43,6 +45,25 @@ class OpenDepositTest {
                                                 .isEqualTo(new BigDecimal("0.02"))));
     }
 
-    // no exception test
+    @Test
+    void shouldNotOpenDeposit() {
+        Account account = new ClassicAccount(Mockito.mock(Person.class));
+        account.setBalance(new BigDecimal("1000"));
+        Transaction transaction = new OpenDeposit(
+                account,
+                new BigDecimal("1001"),
+                LocalDate.of(2024, 12, 31),
+                new BigDecimal("0.02"),
+                3
+        );
+
+        assertThrows(IllegalStateException.class, transaction::execute);
+        assertThat(account.getHistoryOfTransactions().getTransactions().get(0))
+                .isInstanceOf(FailedTransaction.class)
+                .satisfies(failedTransaction -> assertThat(((FailedTransaction)failedTransaction).getCause())
+                        .isInstanceOf(IllegalStateException.class))
+                .extracting(failedTransaction -> ((FailedTransaction)failedTransaction).getFailedTransaction())
+                .isSameAs(transaction);
+    }
 
 }

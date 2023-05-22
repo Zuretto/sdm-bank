@@ -15,7 +15,7 @@ class WithdrawMoneyTest {
     @Test
     void shouldWithdrawMoney() {
         // given
-        Account account = new Account(Mockito.mock(Person.class));
+        ClassicAccount account = new ClassicAccount(Mockito.mock(Person.class));
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("99"));
         // when
@@ -28,9 +28,23 @@ class WithdrawMoneyTest {
     }
 
     @Test
+    void shouldWithdrawMoneyDebitAccount() {
+        Account account = new DebitAccount(new ClassicAccount(Mockito.mock(Person.class)));
+        account.setBalance(new BigDecimal("100"));
+        Transaction transaction = new WithdrawMoney(account, new BigDecimal("101"));
+
+        transaction.execute();
+
+        assertThat(account.getBalance())
+                .isEqualTo(new BigDecimal("-1"));
+        assertThat(account.getHistoryOfTransactions().getTransactions()).containsExactly(transaction);
+        assertThat(transaction.isExecuted()).isTrue();
+    }
+
+    @Test
     void shouldNotWithdrawMoney() {
         // given
-        Account account = new Account(Mockito.mock(Person.class));
+        ClassicAccount account = new ClassicAccount(Mockito.mock(Person.class));
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("101"));
         // when

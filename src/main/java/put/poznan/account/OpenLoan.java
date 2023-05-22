@@ -13,10 +13,10 @@ public class OpenLoan extends Transaction {
     private final LocalDate endDate;
 
     public OpenLoan(Account account,
-                       BigDecimal loanAmount,
-                       LocalDate endDate,
-                       BigDecimal rateOfInterest,
-                       int interestPeriod) {
+                    BigDecimal loanAmount,
+                    LocalDate endDate,
+                    BigDecimal rateOfInterest,
+                    int interestPeriod) {
         super(account.getHistoryOfTransactions());
         this.interestRate = new InterestRate(rateOfInterest, interestPeriod);
         this.account = account;

@@ -1,5 +1,6 @@
 package put.poznan.account;
 
+import put.poznan.reporter.Visitor;
 import put.poznan.transaction.HistoryOfTransactions;
 
 import java.math.BigDecimal;
@@ -57,5 +58,9 @@ public class Loan {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public String accept(Visitor visitor) {
+        return visitor.visitLoan(this);
     }
 }
