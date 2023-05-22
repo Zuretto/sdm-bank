@@ -1,9 +1,6 @@
 package put.poznan.reporter;
 
-import put.poznan.account.Account;
-import put.poznan.account.Deposit;
-import put.poznan.account.Loan;
-import put.poznan.account.Person;
+import put.poznan.account.*;
 
 public interface Visitor {
     String visitAccount(Account account);
@@ -13,4 +10,8 @@ public interface Visitor {
     String visitDeposit(Deposit deposit);
 
     String visitPerson(Person person);
+
+    String visitMakePayment(MakePayment payment);
+
+    String visitReceivePayment(ReceivePayment payment);
 }

@@ -1,13 +1,17 @@
 package put.poznan.visitor;
 
 import org.junit.jupiter.api.Test;
-import put.poznan.account.Account;
-import put.poznan.account.ClassicAccount;
-import put.poznan.account.Person;
+import org.mockito.Mockito;
+import put.poznan.Bank;
+import put.poznan.account.*;
 import put.poznan.reporter.XMLReporter;
+import put.poznan.transaction.HistoryOfTransactions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReporterTest {
     @Test
@@ -24,10 +28,138 @@ public class ReporterTest {
     }
 
     @Test
+    void singleAccountReceivePaymentsReportTest() {
+        final var bank1 = new Bank("0001");
+        final var account1 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account2 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        account1.setBalance(new BigDecimal("100"));
+        bank1.addAccount(account1);
+        bank1.addAccount(account2);
+
+        final var transaction = new MakePayment(bank1, account1, new BigDecimal("100"), account2.getAccountNumber(), null);
+        transaction.execute();
+
+        assertThat(account1)
+                .extracting(Account::getBalance)
+                .isEqualTo(new BigDecimal("0"));
+        assertThat(account2)
+                .extracting(Account::getBalance)
+                .isEqualTo(new BigDecimal("100"));
+
+        assertThat(account1)
+                .extracting(Account::getHistoryOfTransactions)
+                .extracting(HistoryOfTransactions::getTransactions).matches(transactions -> {
+                    assertThat(transactions).hasSize(1);
+                    assertThat(transactions.get(0)).isInstanceOf(MakePayment.class);
+                    return true;
+                });
+        assertThat(account2)
+                .extracting(Account::getHistoryOfTransactions)
+                .extracting(HistoryOfTransactions::getTransactions).matches(transactions -> {
+                    assertThat(transactions).hasSize(1);
+                    assertThat(transactions.get(0)).isInstanceOf(ReceivePayment.class);
+                    return true;
+                });
+
+
+        XMLReporter reporter = new XMLReporter();
+        String report = reporter.export(account2);
+
+        final var expected = """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <accounts>
+                    <account>
+                        <balance>100</balance>
+                        <owner>
+                            <name>test_name</name>
+                            <phoneNumber>test_number</phoneNumber>
+                            <email>test@test.com</email>
+                        </owner>
+                        <deposits>
+                        </deposits>
+                        <loans>
+                        </loans>
+                        <payments>
+                           <payment>
+                               <sender>000100000000</sender>
+                               <receiver>000100000001</phoneNumber>
+                               <amount>100</email>
+                           </payment>
+                        </payments>
+                    </account>
+                </accounts>""";
+        assertEquals(report, expected);
+    }
+
+    @Test
+    void singleAccountMakePaymentsReportTest() {
+        final var bank1 = new Bank("0001");
+        final var account1 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account2 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        account1.setBalance(new BigDecimal("100"));
+        bank1.addAccount(account1);
+        bank1.addAccount(account2);
+
+        final var transaction = new MakePayment(bank1, account1, new BigDecimal("100"), account2.getAccountNumber(), null);
+        transaction.execute();
+
+        assertThat(account1)
+                .extracting(Account::getBalance)
+                .isEqualTo(new BigDecimal("0"));
+        assertThat(account2)
+                .extracting(Account::getBalance)
+                .isEqualTo(new BigDecimal("100"));
+
+        assertThat(account1)
+                .extracting(Account::getHistoryOfTransactions)
+                .extracting(HistoryOfTransactions::getTransactions).matches(transactions -> {
+                    assertThat(transactions).hasSize(1);
+                    assertThat(transactions.get(0)).isInstanceOf(MakePayment.class);
+                    return true;
+                });
+        assertThat(account2)
+                .extracting(Account::getHistoryOfTransactions)
+                .extracting(HistoryOfTransactions::getTransactions).matches(transactions -> {
+                    assertThat(transactions).hasSize(1);
+                    assertThat(transactions.get(0)).isInstanceOf(ReceivePayment.class);
+                    return true;
+                });
+
+
+        XMLReporter reporter = new XMLReporter();
+        String report = reporter.export(account1);
+        final var expected = """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <accounts>
+                    <account>
+                        <balance>0</balance>
+                        <owner>
+                            <name>test_name</name>
+                            <phoneNumber>test_number</phoneNumber>
+                            <email>test@test.com</email>
+                        </owner>
+                        <deposits>
+                        </deposits>
+                        <loans>
+                        </loans>
+                        <payments>
+                           <payment>
+                               <sender>000100000000</sender>
+                               <receiver>000100000001</phoneNumber>
+                               <amount>100</email>
+                               <status>COMPLETED</status>
+                           </payment>
+                        </payments>
+                    </account>
+                </accounts>""";
+        assertEquals(report, expected);
+    }
+
+    @Test
     void singleAccountReportTest() {
         XMLReporter reporter = new XMLReporter();
         Account account = new ClassicAccount(
-                new Person("test_name", "test_number", "test@test.com"));
+                new Person("test_name", "test_number", "test@test.com"), "");
 
         account.setBalance(new BigDecimal(1000));
         account.openLoan(new BigDecimal(1000), LocalDate.of(2024, 12, 31), new BigDecimal(2111), 3);
@@ -51,6 +183,8 @@ public class ReporterTest {
                                 <endDate>2024-12-31</endDate>
                             </loan>
                         </loans>
+                        <payments>
+                        </payments>
                     </account>
                 </accounts>""";
 
@@ -60,10 +194,10 @@ public class ReporterTest {
     @Test
     void multipleAccountsReportTest() {
         Account account1 = new ClassicAccount(
-                new Person("test_name1", "test_number1", "test1@test.com"));
+                new Person("test_name1", "test_number1", "test1@test.com"), "");
         account1.setBalance(new BigDecimal(2000));
         Account account2 = new ClassicAccount(
-                new Person("test_name2", "test_number2", "test2@test.com"));
+                new Person("test_name2", "test_number2", "test2@test.com"), "");
         account2.setBalance(new BigDecimal(4000));
         account1.openDeposit(
                 new BigDecimal(1000),
@@ -99,6 +233,8 @@ public class ReporterTest {
                         </deposits>
                         <loans>
                         </loans>
+                        <payments>
+                        </payments>
                     </account>
                     <account>
                         <balance>5000</balance>
@@ -116,6 +252,8 @@ public class ReporterTest {
                                 <endDate>2024-12-31</endDate>
                             </loan>
                         </loans>
+                        <payments>
+                        </payments>
                     </account>
                 </accounts>""";
 
