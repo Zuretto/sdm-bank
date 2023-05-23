@@ -83,7 +83,7 @@ public abstract class Transaction {
      * @param visitor visitor
      * @return result of visitor's visit.
      */
-    public String accept(Visitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitTransaction(this);
     }
 }

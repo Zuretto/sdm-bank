@@ -5,7 +5,7 @@ import put.poznan.transaction.Transaction;
 
 import java.util.Collection;
 
-public class XMLReporter implements Visitor {
+public class XMLReporter implements Visitor<String> {
 
     public String export(Account... args) {
         StringBuilder sb = new StringBuilder();

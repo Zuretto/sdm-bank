@@ -3,14 +3,14 @@ package put.poznan.reporter;
 import put.poznan.account.*;
 import put.poznan.transaction.Transaction;
 
-public interface Visitor {
-    String visitAccount(Account account);
+public interface Visitor<T> {
+    T visitAccount(Account account);
 
-    String visitLoan(Loan loan);
+    T visitLoan(Loan loan);
 
-    String visitDeposit(Deposit deposit);
+    T visitDeposit(Deposit deposit);
 
-    String visitPerson(Person person);
+    T visitPerson(Person person);
 
-    String visitTransaction(Transaction transaction);
+    T visitTransaction(Transaction transaction);
 }

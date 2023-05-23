@@ -60,7 +60,7 @@ public class Deposit {
         this.endDate = endDate;
     }
 
-    public String accept (Visitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitDeposit(this);
     }
 }

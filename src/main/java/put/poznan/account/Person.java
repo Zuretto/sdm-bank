@@ -38,7 +38,7 @@ public class Person {
         this.email = email;
     }
 
-    public String accept(Visitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitPerson(this);
     }
 }
