@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ public class OpenDeposit extends Transaction {
     private final BigDecimal amountToBeDeposited;
     private final LocalDate endDate;
 
-    protected OpenDeposit(Account account,
+    public OpenDeposit(Account account,
                           BigDecimal amountToBeDeposited,
                           LocalDate endDate,
                           BigDecimal rateOfInterest,
@@ -22,6 +23,20 @@ public class OpenDeposit extends Transaction {
         this.account = account;
         this.amountToBeDeposited = amountToBeDeposited;
         this.endDate = endDate;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.OPEN_DEPOSIT;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("Transaction to open deposit for account: %s, interest rate: %s, amount: %s and end date: %s",
+                account,
+                interestRate,
+                amountToBeDeposited,
+                endDate);
     }
 
     @Override

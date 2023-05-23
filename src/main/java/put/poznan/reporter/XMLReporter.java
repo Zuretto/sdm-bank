@@ -1,8 +1,12 @@
 package put.poznan.reporter;
 
 import put.poznan.account.*;
+import put.poznan.transaction.Transaction;
 
-public class XMLReporter implements Visitor {
+import java.util.Collection;
+
+public class XMLReporter implements Visitor<String> {
+
     public String export(Account... args) {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n");
@@ -11,6 +15,17 @@ public class XMLReporter implements Visitor {
             sb.append(account.accept(this)).append("\n");
         }
         sb.append("</accounts>");
+        return sb.toString();
+    }
+
+    public String export(Collection<Transaction> transactions) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n");
+        sb.append("<transactions>" + "\n");
+        for (Transaction transaction : transactions) {
+            sb.append(transaction.accept(this)).append("\n");
+        }
+        sb.append("</transactions>");
         return sb.toString();
     }
 
@@ -71,22 +86,12 @@ public class XMLReporter implements Visitor {
     }
 
     @Override
-    public String visitMakePayment(MakePayment payment) {
-        return  "           <payment>" + "\n" +
-                "               <sender>" + payment.getSenderAccount().getAccountNumber() + "</sender>" + "\n" +
-                "               <receiver>" + payment.getReceiverAccountNumber()+ "</phoneNumber>" + "\n" +
-                "               <amount>" + payment.getAmount() + "</email>" + "\n" +
-                "               <status>" + payment.getStatus() + "</status>" + "\n" +
-                "           </payment>";
-    }
-
-    @Override
-    public String visitReceivePayment(ReceivePayment payment) {
-        return  "           <payment>" + "\n" +
-                "               <sender>" + payment.getFromAccountNumber() + "</sender>" + "\n" +
-                "               <receiver>" + payment.getToAccount().getAccountNumber() + "</phoneNumber>" + "\n" +
-                "               <amount>" + payment.getAmount() + "</email>" + "\n" +
-                "           </payment>";
+    public String visitTransaction(Transaction transaction) {
+        return "           <transaction>" + "\n" +
+                "               <transactionType>" + transaction.getTransactionType() + "</transactionType>" + "\n" +
+                "               <description>" + transaction.getDescription() + "</description>" + "\n" +
+                "               <dateOfExecution>" + transaction.getDateOfExecution() + "</dateOfExecution>" + "\n" +
+                "           </transaction>";
     }
 
 }
