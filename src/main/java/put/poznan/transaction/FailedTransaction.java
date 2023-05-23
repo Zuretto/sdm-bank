@@ -1,5 +1,7 @@
 package put.poznan.transaction;
 
+import java.time.LocalDate;
+
 public class FailedTransaction extends Transaction {
 
     private final Transaction failedTransaction;
@@ -7,10 +9,25 @@ public class FailedTransaction extends Transaction {
 
     protected FailedTransaction(HistoryOfTransactions historyOfTransactions,
                                 Transaction failedTransaction,
-                                Throwable cause) {
+                                Throwable cause,
+                                LocalDate dateOfExecution) {
         super(historyOfTransactions);
         this.failedTransaction = failedTransaction;
         this.cause = cause;
+        this.dateOfExecution = dateOfExecution;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.FAILED;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("Failed transaction with type: '%s', description: '%s' and cause: '%s'",
+                failedTransaction.getTransactionType(),
+                failedTransaction.getDescription(),
+                cause);
     }
 
     @Override
@@ -20,6 +37,7 @@ public class FailedTransaction extends Transaction {
 
     /**
      * Failed Transaction is executed by default
+     *
      * @return true
      */
     @Override

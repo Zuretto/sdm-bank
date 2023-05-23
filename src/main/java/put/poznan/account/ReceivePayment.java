@@ -1,8 +1,8 @@
 package put.poznan.account;
 
 import put.poznan.reporter.Visitor;
-import put.poznan.transaction.HistoryOfTransactions;
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 
@@ -16,6 +16,19 @@ public class ReceivePayment extends Transaction {
         this.fromAccountNumber = fromAccountNumber;
         this.toAccount = toAccount;
         this.amount = amount;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.RECEIVE_PAYMENT;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format(
+                "Transaction to receive payment for from account number: %s to account: %s with amount: %s",
+                fromAccountNumber, toAccount, amount
+        );
     }
 
     @Override
