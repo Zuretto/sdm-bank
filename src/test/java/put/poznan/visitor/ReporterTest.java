@@ -8,6 +8,8 @@ import put.poznan.transaction.HistoryOfTransactions;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +18,7 @@ public class ReporterTest {
     @Test
     void emptyReportTest() {
         XMLReporter reporter = new XMLReporter();
-        String report = reporter.export();
+        String report = reporter.exportAccounts(new ArrayList<>());
 
         String expected = """
                 <?xml version="1.0" encoding="UTF-8"?>
@@ -62,9 +64,9 @@ public class ReporterTest {
 
 
         XMLReporter reporter = new XMLReporter();
-        String report = reporter.export(account2);
+        String report = reporter.exportAccounts(List.of(account2));
 
-        final var expected = """
+        final var expected = String.format("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <accounts>
                     <account>
@@ -78,16 +80,16 @@ public class ReporterTest {
                         </deposits>
                         <loans>
                         </loans>
-                        <payments>
-                           <payment>
-                               <sender>000100000000</sender>
-                               <receiver>000100000001</phoneNumber>
-                               <amount>100</email>
-                           </payment>
-                        </payments>
+                        <transactions>
+                            <transaction>
+                                <transactionType>RECEIVE_PAYMENT</transactionType>
+                                <description>Transaction to receive payment for from account number: 000100000000 to account: %s with amount: 100</description>
+                                <dateOfExecution>%s</dateOfExecution>
+                            </transaction>
+                        </transactions>
                     </account>
-                </accounts>""";
-        assertEquals(report, expected);
+                </accounts>""", account2, LocalDate.now());
+        assertEquals(expected, report);
     }
 
     @Test
@@ -126,8 +128,8 @@ public class ReporterTest {
 
 
         XMLReporter reporter = new XMLReporter();
-        String report = reporter.export(account1);
-        final var expected = """
+        String report = reporter.exportAccounts(List.of(account1));
+        final var expected = String.format("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <accounts>
                     <account>
@@ -141,17 +143,16 @@ public class ReporterTest {
                         </deposits>
                         <loans>
                         </loans>
-                        <payments>
-                           <payment>
-                               <sender>000100000000</sender>
-                               <receiver>000100000001</phoneNumber>
-                               <amount>100</email>
-                               <status>COMPLETED</status>
-                           </payment>
-                        </payments>
+                        <transactions>
+                            <transaction>
+                                <transactionType>MAKE_PAYMENT</transactionType>
+                                <description>Transaction to make payment from sender: %s to receiver: 000100000001 with amount: 100</description>
+                                <dateOfExecution>%s</dateOfExecution>
+                            </transaction>
+                        </transactions>
                     </account>
-                </accounts>""";
-        assertEquals(report, expected);
+                </accounts>""", account1, LocalDate.now());
+        assertEquals(expected, report);
     }
 
     @Test
@@ -161,9 +162,9 @@ public class ReporterTest {
                 new Person("test_name", "test_number", "test@test.com"), "");
 
         account.setBalance(new BigDecimal(1000));
-        account.openLoan(new BigDecimal(1000), LocalDate.of(2024, 12, 31), new BigDecimal(2111), 3);
+        account.openLoan(new BigDecimal(1000), LocalDate.now().plusYears(1), new BigDecimal(2111), 3);
 
-        String expected = """
+        String expected = String.format("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <accounts>
                     <account>
@@ -178,20 +179,22 @@ public class ReporterTest {
                         <loans>
                             <loan>
                                 <amount>1000</amount>
-                                <startDate>2023-05-22</startDate>
-                                <endDate>2024-12-31</endDate>
+                                <startDate>%s</startDate>
+                                <endDate>%s</endDate>
                             </loan>
                         </loans>
-                        <payments>
-                        </payments>
+                        <transactions>
+                        </transactions>
                     </account>
-                </accounts>""";
+                </accounts>""", LocalDate.now(), LocalDate.now().plusYears(1));
 
-        assert expected.equals(reporter.export(account));
+        assert expected.equals(reporter.exportAccounts(List.of(account)));
     }
 
     @Test
     void multipleAccountsReportTest() {
+        LocalDate today = LocalDate.now();
+        LocalDate inOneYear = today.plusYears(1);
         Account account1 = new ClassicAccount(
                 new Person("test_name1", "test_number1", "test1@test.com"), "");
         account1.setBalance(new BigDecimal(2000));
@@ -200,20 +203,20 @@ public class ReporterTest {
         account2.setBalance(new BigDecimal(4000));
         account1.openDeposit(
                 new BigDecimal(1000),
-                LocalDate.of(2024, 12, 31),
+                inOneYear,
                 new BigDecimal(2111),
                 3
         );
         account2.openLoan(
                 new BigDecimal(1000),
-                LocalDate.of(2024, 12, 31),
+                inOneYear,
                 new BigDecimal(2111),
                 3
         );
         XMLReporter reporter = new XMLReporter();
-        String report = reporter.export(account1, account2);
+        String report = reporter.exportAccounts(List.of(account1, account2));
 
-        String expected = """
+        String expected = String.format("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <accounts>
                     <account>
@@ -226,14 +229,14 @@ public class ReporterTest {
                         <deposits>
                             <deposit>
                                 <amount>1000</amount>
-                                <startDate>2023-05-22</startDate>
-                                <endDate>2024-12-31</endDate>
+                                <startDate>%s</startDate>
+                                <endDate>%s</endDate>
                             </deposit>
                         </deposits>
                         <loans>
                         </loans>
-                        <payments>
-                        </payments>
+                        <transactions>
+                        </transactions>
                     </account>
                     <account>
                         <balance>5000</balance>
@@ -247,26 +250,32 @@ public class ReporterTest {
                         <loans>
                             <loan>
                                 <amount>1000</amount>
-                                <startDate>2023-05-22</startDate>
-                                <endDate>2024-12-31</endDate>
+                                <startDate>%s</startDate>
+                                <endDate>%s</endDate>
                             </loan>
                         </loans>
-                        <payments>
-                        </payments>
+                        <transactions>
+                        </transactions>
                     </account>
-                </accounts>""";
+                </accounts>""",
+                today,
+                inOneYear,
+                today,
+                inOneYear);
 
         assert expected.equals(report);
     }
 
     @Test
     void multipleTransactionsReportTest() {
+        LocalDate today = LocalDate.now();
+        LocalDate inOneYear = today.plusYears(1);
         Account account = new ClassicAccount(
                 new Person("test_name1", "test_number1", "test1@test.com"), "");
         account.setBalance(new BigDecimal(2000));
         new OpenDeposit(account,
                 new BigDecimal(200),
-                LocalDate.of(2020, 1, 1),
+                inOneYear,
                 new BigDecimal("0.01"),
                 12).execute();
         Deposit deposit = account.getDeposits().get(0);
@@ -275,22 +284,29 @@ public class ReporterTest {
                 deposit
         ).execute();
         XMLReporter reporter = new XMLReporter();
-        String report = reporter.export(account.getHistoryOfTransactions().getTransactions());
+        String report = reporter.exportTransactions(account.getHistoryOfTransactions().getTransactions());
 
         String expected = String.format("""
                 <?xml version="1.0" encoding="UTF-8"?>
                 <transactions>
-                           <transaction>
-                               <transactionType>OPEN_DEPOSIT</transactionType>
-                               <description>Transaction to open deposit for account: %s, interest rate: %s, amount: 200 and end date: 2020-01-01</description>
-                               <dateOfExecution>2023-05-23</dateOfExecution>
-                           </transaction>
-                           <transaction>
-                               <transactionType>CLOSE_DEPOSIT</transactionType>
-                               <description>Transaction to close deposit. Deposit: %s, account: %s</description>
-                               <dateOfExecution>2023-05-23</dateOfExecution>
-                           </transaction>
-                </transactions>""", account, deposit.getInterestRate(), deposit, account);
+                            <transaction>
+                                <transactionType>OPEN_DEPOSIT</transactionType>
+                                <description>Transaction to open deposit for account: %s, interest rate: %s, amount: 200 and end date: %s</description>
+                                <dateOfExecution>%s</dateOfExecution>
+                            </transaction>
+                            <transaction>
+                                <transactionType>CLOSE_DEPOSIT</transactionType>
+                                <description>Transaction to close deposit. Deposit: %s, account: %s</description>
+                                <dateOfExecution>%s</dateOfExecution>
+                            </transaction>
+                </transactions>""",
+                account,
+                deposit.getInterestRate(),
+                inOneYear,
+                today,
+                deposit,
+                account,
+                today);
         assertThat(report).isEqualTo(expected);
     }
 
