@@ -1,6 +1,5 @@
 package put.poznan.account;
 
-import put.poznan.reporter.Visitor;
 import put.poznan.transaction.Transaction;
 import put.poznan.transaction.TransactionType;
 
@@ -46,9 +45,5 @@ public class ReceivePayment extends Transaction {
 
     public BigDecimal getAmount() {
         return amount;
-    }
-
-    public String accept(Visitor visitor) {
-        return visitor.visitReceivePayment(this);
     }
 }

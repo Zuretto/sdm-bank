@@ -1,7 +1,6 @@
 package put.poznan.visitor;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import put.poznan.Bank;
 import put.poznan.account.*;
 import put.poznan.reporter.XMLReporter;
@@ -259,4 +258,40 @@ public class ReporterTest {
 
         assert expected.equals(report);
     }
+
+    @Test
+    void multipleTransactionsReportTest() {
+        Account account = new ClassicAccount(
+                new Person("test_name1", "test_number1", "test1@test.com"), "");
+        account.setBalance(new BigDecimal(2000));
+        new OpenDeposit(account,
+                new BigDecimal(200),
+                LocalDate.of(2020, 1, 1),
+                new BigDecimal("0.01"),
+                12).execute();
+        Deposit deposit = account.getDeposits().get(0);
+        new CloseDeposit(
+                account,
+                deposit
+        ).execute();
+        XMLReporter reporter = new XMLReporter();
+        String report = reporter.export(account.getHistoryOfTransactions().getTransactions());
+
+        String expected = String.format("""
+                <?xml version="1.0" encoding="UTF-8"?>
+                <transactions>
+                           <transaction>
+                               <transactionType>OPEN_DEPOSIT</transactionType>
+                               <description>Transaction to open deposit for account: %s, interest rate: %s, amount: 200 and end date: 2020-01-01</description>
+                               <dateOfExecution>2023-05-23</dateOfExecution>
+                           </transaction>
+                           <transaction>
+                               <transactionType>CLOSE_DEPOSIT</transactionType>
+                               <description>Transaction to close deposit. Deposit: %s, account: %s</description>
+                               <dateOfExecution>2023-05-23</dateOfExecution>
+                           </transaction>
+                </transactions>""", account, deposit.getInterestRate(), deposit, account);
+        assertThat(report).isEqualTo(expected);
+    }
+
 }

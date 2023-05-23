@@ -4,7 +4,6 @@ import put.poznan.Bank;
 import put.poznan.interbank.InterBankPayment;
 import put.poznan.interbank.InterbankPaymentAgency;
 import put.poznan.interbank.PaymentStatus;
-import put.poznan.reporter.Visitor;
 import put.poznan.transaction.Transaction;
 import put.poznan.transaction.TransactionType;
 
@@ -108,9 +107,5 @@ public class MakePayment extends Transaction {
                         },
                         () -> status = PaymentStatus.ACCOUNT_NOT_FOUND
                 );
-    }
-
-    public String accept(Visitor visitor) {
-        return visitor.visitMakePayment(this);
     }
 }

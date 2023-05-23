@@ -1,6 +1,7 @@
 package put.poznan.reporter;
 
 import put.poznan.account.*;
+import put.poznan.transaction.Transaction;
 
 public interface Visitor {
     String visitAccount(Account account);
@@ -11,7 +12,5 @@ public interface Visitor {
 
     String visitPerson(Person person);
 
-    String visitMakePayment(MakePayment payment);
-
-    String visitReceivePayment(ReceivePayment payment);
+    String visitTransaction(Transaction transaction);
 }

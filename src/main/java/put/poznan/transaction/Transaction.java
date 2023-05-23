@@ -1,5 +1,7 @@
 package put.poznan.transaction;
 
+import put.poznan.reporter.Visitor;
+
 import java.time.LocalDate;
 
 public abstract class Transaction {
@@ -36,12 +38,14 @@ public abstract class Transaction {
 
     /**
      * Transaction type. To be derived by subclass.
+     *
      * @return transaction type
      */
     public abstract TransactionType getTransactionType();
 
     /**
      * Description of the transaction. To be derived by subclass.
+     *
      * @return description
      */
     public abstract String getDescription();
@@ -53,6 +57,7 @@ public abstract class Transaction {
 
     /**
      * returns true if transaction was executed, false otherwise.
+     *
      * @return boolean
      */
     public boolean isExecuted() {
@@ -61,13 +66,24 @@ public abstract class Transaction {
 
     /**
      * Returns date of transaction's execution.
-     * @throws IllegalStateException if the transaction was not executed.
+     *
      * @return date of execution.
+     * @throws IllegalStateException if the transaction was not executed.
      */
     public LocalDate getDateOfExecution() {
         if (dateOfExecution == null) {
             throw new IllegalStateException("The transaction was not executed.");
         }
         return dateOfExecution;
+    }
+
+    /**
+     * Method that accepts visitor.
+     *
+     * @param visitor visitor
+     * @return result of visitor's visit.
+     */
+    public String accept(Visitor visitor) {
+        return visitor.visitTransaction(this);
     }
 }

@@ -13,7 +13,7 @@ public class OpenDeposit extends Transaction {
     private final BigDecimal amountToBeDeposited;
     private final LocalDate endDate;
 
-    protected OpenDeposit(Account account,
+    public OpenDeposit(Account account,
                           BigDecimal amountToBeDeposited,
                           LocalDate endDate,
                           BigDecimal rateOfInterest,
