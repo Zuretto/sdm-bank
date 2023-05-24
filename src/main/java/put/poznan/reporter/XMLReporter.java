@@ -7,18 +7,18 @@ import java.util.Collection;
 
 public class XMLReporter implements Visitor<String> {
 
-    public String export(Account... args) {
+    public String exportAccounts(Collection<Account> accounts) {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n");
         sb.append("<accounts>" + "\n");
-        for (Account account : args) {
+        for (Account account : accounts) {
             sb.append(account.accept(this)).append("\n");
         }
         sb.append("</accounts>");
         return sb.toString();
     }
 
-    public String export(Collection<Transaction> transactions) {
+    public String exportTransactions(Collection<Transaction> transactions) {
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "\n");
         sb.append("<transactions>" + "\n");
@@ -44,7 +44,7 @@ public class XMLReporter implements Visitor<String> {
             sb.append(loan.accept(this)).append("\n");
         }
         sb.append("        </loans>" + "\n");
-        sb.append("        <payments>" + "\n");
+        sb.append("        <transactions>" + "\n");
         for (Object transaction : account.getHistoryOfTransactions().getTransactions()) {
             if (transaction instanceof MakePayment) {
                 sb.append(((MakePayment) transaction).accept(this)).append("\n");
@@ -53,7 +53,7 @@ public class XMLReporter implements Visitor<String> {
                 sb.append(((ReceivePayment) transaction).accept(this)).append("\n");
             }
         }
-        sb.append("        </payments>" + "\n");
+        sb.append("        </transactions>" + "\n");
         sb.append("    </account>");
         return sb.toString();
     }
@@ -87,11 +87,11 @@ public class XMLReporter implements Visitor<String> {
 
     @Override
     public String visitTransaction(Transaction transaction) {
-        return "           <transaction>" + "\n" +
-                "               <transactionType>" + transaction.getTransactionType() + "</transactionType>" + "\n" +
-                "               <description>" + transaction.getDescription() + "</description>" + "\n" +
-                "               <dateOfExecution>" + transaction.getDateOfExecution() + "</dateOfExecution>" + "\n" +
-                "           </transaction>";
+        return "            <transaction>" + "\n" +
+                "                <transactionType>" + transaction.getTransactionType() + "</transactionType>" + "\n" +
+                "                <description>" + transaction.getDescription() + "</description>" + "\n" +
+                "                <dateOfExecution>" + transaction.getDateOfExecution() + "</dateOfExecution>" + "\n" +
+                "            </transaction>";
     }
 
 }
