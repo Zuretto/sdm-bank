@@ -14,7 +14,7 @@ class OpenLoanTest {
     @Test
     void shouldOpenLoan() {
         // given
-        Account account = new ClassicAccount(Mockito.mock(Person.class), "");
+        Account account = new StandardAccount(Mockito.mock(Person.class), "");
         account.setBalance(new BigDecimal("1000"));
         Transaction transaction = new OpenLoan(
                 account,

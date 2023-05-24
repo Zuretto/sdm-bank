@@ -18,7 +18,7 @@ class ChangeInterestRateTest {
         Deposit deposit = new Deposit(new InterestRate(BigDecimal.ONE, 10),
                 LocalDate.of(2020, 1, 1),
                 LocalDate.of(2024, 1, 1),
-                Mockito.mock(ClassicAccount.class),
+                Mockito.mock(StandardAccount.class),
                 BigDecimal.TEN);
         InterestRate newInterestRate = new InterestRate(BigDecimal.TEN, 20);
         Transaction changeInterestRate = ChangeInterestRate.createChangeInterestRateTransaction(deposit, newInterestRate);
@@ -36,7 +36,7 @@ class ChangeInterestRateTest {
                 new InterestRate(BigDecimal.ONE, 10),
                 LocalDate.of(2020, 1, 1),
                 LocalDate.of(2024, 1, 1),
-                Mockito.mock(ClassicAccount.class),
+                Mockito.mock(StandardAccount.class),
                 BigDecimal.TEN
         );
         InterestRate newInterestRate = new InterestRate(BigDecimal.TEN, 20);

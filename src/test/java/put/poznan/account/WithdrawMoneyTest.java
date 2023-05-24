@@ -15,7 +15,7 @@ class WithdrawMoneyTest {
     @Test
     void shouldWithdrawMoney() {
         // given
-        ClassicAccount account = new ClassicAccount(Mockito.mock(Person.class), "");
+        StandardAccount account = new StandardAccount(Mockito.mock(Person.class), "");
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("99"));
         // when
@@ -29,7 +29,7 @@ class WithdrawMoneyTest {
 
     @Test
     void shouldWithdrawMoneyDebitAccount() {
-        Account account = new DebitAccount(new ClassicAccount(Mockito.mock(Person.class), ""));
+        Account account = new DebitAccount(new StandardAccount(Mockito.mock(Person.class), ""));
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("101"));
 
@@ -44,7 +44,7 @@ class WithdrawMoneyTest {
     @Test
     void shouldNotWithdrawMoney() {
         // given
-        ClassicAccount account = new ClassicAccount(Mockito.mock(Person.class), "");
+        StandardAccount account = new StandardAccount(Mockito.mock(Person.class), "");
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("101"));
         // when

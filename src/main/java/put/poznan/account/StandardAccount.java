@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ClassicAccount implements Account {
+public class StandardAccount implements Account {
 
     private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
 
@@ -21,7 +21,7 @@ public class ClassicAccount implements Account {
     private final String accountNumber;
 
 
-    public ClassicAccount(Person person, String accountNumber) {
+    public StandardAccount(Person person, String accountNumber) {
         this.person = person;
         this.accountNumber = accountNumber;
         this.balance = new BigDecimal(0);
