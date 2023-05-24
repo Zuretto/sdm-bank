@@ -31,8 +31,8 @@ public class ReporterTest {
     @Test
     void singleAccountReceivePaymentsReportTest() {
         final var bank1 = new Bank("0001");
-        final var account1 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
-        final var account2 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account1 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account2 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
@@ -95,8 +95,8 @@ public class ReporterTest {
     @Test
     void singleAccountMakePaymentsReportTest() {
         final var bank1 = new Bank("0001");
-        final var account1 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
-        final var account2 = new ClassicAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account1 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account2 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
@@ -158,7 +158,7 @@ public class ReporterTest {
     @Test
     void singleAccountReportTest() {
         XMLReporter reporter = new XMLReporter();
-        Account account = new ClassicAccount(
+        Account account = new StandardAccount(
                 new Person("test_name", "test_number", "test@test.com"), "");
 
         account.setBalance(new BigDecimal(1000));
@@ -195,10 +195,10 @@ public class ReporterTest {
     void multipleAccountsReportTest() {
         LocalDate today = LocalDate.now();
         LocalDate inOneYear = today.plusYears(1);
-        Account account1 = new ClassicAccount(
+        Account account1 = new StandardAccount(
                 new Person("test_name1", "test_number1", "test1@test.com"), "");
         account1.setBalance(new BigDecimal(2000));
-        Account account2 = new ClassicAccount(
+        Account account2 = new StandardAccount(
                 new Person("test_name2", "test_number2", "test2@test.com"), "");
         account2.setBalance(new BigDecimal(4000));
         account1.openDeposit(
@@ -270,7 +270,7 @@ public class ReporterTest {
     void multipleTransactionsReportTest() {
         LocalDate today = LocalDate.now();
         LocalDate inOneYear = today.plusYears(1);
-        Account account = new ClassicAccount(
+        Account account = new StandardAccount(
                 new Person("test_name1", "test_number1", "test1@test.com"), "");
         account.setBalance(new BigDecimal(2000));
         new OpenDeposit(account,
