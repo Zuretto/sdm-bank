@@ -17,7 +17,7 @@ class OpenDepositTest {
     @Test
     void shouldOpenDeposit() {
         // given
-        Account account = new StandardAccount(Mockito.mock(Person.class), "");
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal("1000"));
         Transaction transaction = new OpenDeposit(
                 account,
@@ -41,7 +41,7 @@ class OpenDepositTest {
 
     @Test
     void shouldNotOpenDeposit() {
-        Account account = new StandardAccount(Mockito.mock(Person.class), "");
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal("1000"));
         Transaction transaction = new OpenDeposit(
                 account,

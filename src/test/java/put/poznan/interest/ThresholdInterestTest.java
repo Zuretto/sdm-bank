@@ -3,8 +3,8 @@ package put.poznan.interest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import put.poznan.account.Account;
-import put.poznan.account.ClassicAccount;
 import put.poznan.account.Person;
+import put.poznan.account.StandardAccount;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ class ThresholdInterestTest {
     @Test
     void calculateInterestBelowThresholdTest() {
         // given
-        Account account = new ClassicAccount(Mockito.mock(Person.class), "", new ThresholdInterest(
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", new ThresholdInterest(
                 BigDecimal.valueOf(0.03),
                 BigDecimal.valueOf(0.08),
                 BigDecimal.valueOf(8_000),
@@ -35,7 +35,7 @@ class ThresholdInterestTest {
     @Test
     void calculateInterestOverThresholdTest() {
         // given
-        Account account = new ClassicAccount(Mockito.mock(Person.class), "", new ThresholdInterest(
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", new ThresholdInterest(
                 BigDecimal.valueOf(0.03),
                 BigDecimal.valueOf(0.08),
                 BigDecimal.valueOf(8_000),

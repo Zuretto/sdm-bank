@@ -29,8 +29,8 @@ public class OpenLoan extends Transaction {
     @Override
     public String getDescription() {
         return String.format(
-                "Transaction to open new loan fora account: %s with interest rate: %s, amount: %s and end date: %s",
-                account, interestRate, loanAmount, endDate
+                "Transaction to open new loan for an account: %s with amount: %s and end date: %s",
+                account, loanAmount, endDate
         );
     }
 

@@ -17,7 +17,7 @@ class ChangeInterestMechanismTest {
     @Test
     void shouldChangeInterestMechanismToDifferentMechanism() {
         // given
-        Account account = new ClassicAccount(Mockito.mock(Person.class), "", new LinearInterest(BigDecimal.ONE, 10));
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", new LinearInterest(BigDecimal.ONE, 10));
 
         Transaction changeInterestMechanism = new ChangeInterestMechanism(account, new ThresholdInterest(
                 BigDecimal.valueOf(0.03),
@@ -34,7 +34,7 @@ class ChangeInterestMechanismTest {
     @Test
     void shouldChangeInterestMechanismToSameMechanismWithDifferentParameters() {
         // given
-        Account classicAccount = new ClassicAccount(Mockito.mock(Person.class), "", new LinearInterest(BigDecimal.valueOf(0.03), 3));
+        Account classicAccount = new StandardAccount(Mockito.mock(Person.class), "", new LinearInterest(BigDecimal.valueOf(0.03), 3));
         Account debitAccount = new DebitAccount(classicAccount);
 
         Transaction changeInterestMechanism = new ChangeInterestMechanism(debitAccount, new LinearInterest(BigDecimal.valueOf(0.05), 6));

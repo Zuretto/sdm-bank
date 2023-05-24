@@ -23,7 +23,7 @@ public class StandardAccount implements Account {
 
     private InterestMechanism interestMechanism;
 
-    public StandardAccount(Person person, String accountNumber) {
+    public StandardAccount(Person person, String accountNumber, InterestMechanism interestMechanism) {
         this.person = person;
         this.accountNumber = accountNumber;
         this.balance = new BigDecimal(0);

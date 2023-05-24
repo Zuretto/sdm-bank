@@ -17,7 +17,7 @@ class AccountTest {
     @MethodSource("provideCanMoneyBeWithdrawnTests")
     void testCanMoneyBeWithdrawnMethod(BigDecimal accountsBalance, BigDecimal moneyToBeWithdrawn, boolean expectedResult) {
         // given
-        Account classicAccount = new StandardAccount(Mockito.mock(Person.class), "");
+        Account classicAccount = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         Account debitAccount = new DebitAccount(classicAccount);
 
         classicAccount.setBalance(accountsBalance);

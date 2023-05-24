@@ -28,9 +28,8 @@ public class OpenDeposit extends Transaction {
 
     @Override
     public String getDescription() {
-        return String.format("Transaction to open deposit for account: %s, interest rate: %s, amount: %s and end date: %s",
+        return String.format("Transaction to open deposit for account: %s, amount: %s and end date: %s",
                 account,
-                interestRate,
                 amountToBeDeposited,
                 endDate);
     }
