@@ -21,7 +21,7 @@ public class CloseDeposit extends Transaction {
     protected void executeImplementation() {
         final BigDecimal newAccountAmount;
         if (deposit.getEndDate().isBefore(LocalDate.now())) {
-            BigDecimal interest = deposit.getInterestRate().calculateInterest(deposit.getAmount(),
+            BigDecimal interest = account.getInterestMechanism().calculateInterest(deposit.getAmount(),
                     deposit.getStartDate(),
                     deposit.getEndDate());
             newAccountAmount = account.getBalance()

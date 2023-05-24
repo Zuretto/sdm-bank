@@ -18,7 +18,7 @@ public class RepayLoan extends Transaction {
     @Override
     protected void executeImplementation() {
         BigDecimal loanAmountAndInterest = loan.getAmount()
-                .add(loan.getInterestRate().calculateInterest(loan.getAmount(), loan.getStartDate(), loan.getEndDate()));
+                .add(account.getInterestMechanism().calculateInterest(loan.getAmount(), loan.getStartDate(), loan.getEndDate()));
         if (!account.hasFunds(loanAmountAndInterest)) {
             throw new IllegalStateException("Could not repay loan - insufficient funds.");
         }

@@ -7,18 +7,14 @@ import java.time.LocalDate;
 
 public class OpenDeposit extends Transaction {
 
-    private final InterestRate interestRate;
     private final Account account;
     private final BigDecimal amountToBeDeposited;
     private final LocalDate endDate;
 
     protected OpenDeposit(Account account,
                           BigDecimal amountToBeDeposited,
-                          LocalDate endDate,
-                          BigDecimal rateOfInterest,
-                          int interestPeriod) {
+                          LocalDate endDate) {
         super(account.getHistoryOfTransactions());
-        this.interestRate = new InterestRate(rateOfInterest, interestPeriod);
         this.account = account;
         this.amountToBeDeposited = amountToBeDeposited;
         this.endDate = endDate;
@@ -31,7 +27,7 @@ public class OpenDeposit extends Transaction {
         }
         final BigDecimal newAccountBalance = account.getBalance().subtract(amountToBeDeposited);
         account.setBalance(newAccountBalance);
-        Deposit deposit = new Deposit(interestRate, LocalDate.now(), endDate, account, amountToBeDeposited);
+        Deposit deposit = new Deposit(LocalDate.now(), endDate, account, amountToBeDeposited);
         account.addDeposit(deposit);
     }
 }

@@ -10,14 +10,11 @@ public class Loan {
 
     private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
     private final Account account;
-    private InterestRate interestRate;
     private final BigDecimal amount;
-
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public Loan(InterestRate interestRate, LocalDate startDate, LocalDate endDate, Account account, BigDecimal depositAmount) {
-        this.interestRate = interestRate;
+    public Loan(LocalDate startDate, LocalDate endDate, Account account, BigDecimal depositAmount) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.account = account;
@@ -30,14 +27,6 @@ public class Loan {
 
     public Account getAccount() {
         return account;
-    }
-
-    public InterestRate getInterestRate() {
-        return interestRate;
-    }
-
-    public void setInterestRate(InterestRate interestRate) {
-        this.interestRate = interestRate;
     }
 
     public BigDecimal getAmount() {

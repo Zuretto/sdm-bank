@@ -1,10 +1,11 @@
-package put.poznan.account;
+package put.poznan.interest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-public class InterestRate {
+public class LinearInterest implements InterestMechanism {
 
     private final BigDecimal rate;
 
@@ -13,7 +14,7 @@ public class InterestRate {
      */
     private final int interestPeriod;
 
-    public InterestRate(BigDecimal interestRate, int interestPeriod) {
+    public LinearInterest(BigDecimal interestRate, int interestPeriod) {
         this.rate = interestRate;
         this.interestPeriod = interestPeriod;
     }
@@ -34,10 +35,11 @@ public class InterestRate {
      * @param to     date to which the interest should be calculated
      * @return calculated interest
      */
+    @Override
     public BigDecimal calculateInterest(final BigDecimal amount,
                                         final LocalDate from,
                                         final LocalDate to) {
-        final int monthsBetween = from.until(to).getMonths();
+        final long monthsBetween = ChronoUnit.MONTHS.between(from, to);
         return amount
                 .multiply(rate)
                 .multiply(new BigDecimal(monthsBetween / interestPeriod));
@@ -46,7 +48,7 @@ public class InterestRate {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof InterestRate that)) return false;
+        if (!(o instanceof LinearInterest that)) return false;
         return interestPeriod == that.interestPeriod && Objects.equals(rate, that.rate);
     }
 

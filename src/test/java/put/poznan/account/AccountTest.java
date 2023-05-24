@@ -4,6 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
+import put.poznan.interest.InterestMechanism;
 
 import java.math.BigDecimal;
 import java.util.stream.Stream;
@@ -16,7 +17,7 @@ class AccountTest {
     @MethodSource("provideCanMoneyBeWithdrawnTests")
     void testCanMoneyBeWithdrawnMethod(BigDecimal accountsBalance, BigDecimal moneyToBeWithdrawn, boolean expectedResult) {
         // given
-        Account classicAccount = new ClassicAccount(Mockito.mock(Person.class), "");
+        Account classicAccount = new ClassicAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         Account debitAccount = new DebitAccount(classicAccount);
 
         classicAccount.setBalance(accountsBalance);

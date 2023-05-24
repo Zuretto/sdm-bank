@@ -1,5 +1,6 @@
 package put.poznan.account;
 
+import put.poznan.interest.InterestMechanism;
 import put.poznan.reporter.Visitor;
 import put.poznan.transaction.HistoryOfTransactions;
 import put.poznan.transaction.Transaction;
@@ -20,13 +21,16 @@ public class ClassicAccount implements Account {
     private final List<Loan> loans;
     private final String accountNumber;
 
+    private InterestMechanism interestMechanism;
 
-    public ClassicAccount(Person person, String accountNumber) {
+
+    public ClassicAccount(Person person, String accountNumber, InterestMechanism interestMechanism) {
         this.person = person;
         this.accountNumber = accountNumber;
         this.balance = new BigDecimal(0);
         this.deposits = new ArrayList<>();
         this.loans = new ArrayList<>();
+        this.interestMechanism = interestMechanism;
     }
 
     public void withdrawMoney(BigDecimal moneyToBeWithdrawn) {
@@ -49,9 +53,7 @@ public class ClassicAccount implements Account {
         Transaction transaction = new OpenDeposit(
                 this,
                 amountToBeDeposited,
-                endDate,
-                rateOfInterest,
-                interestPeriod
+                endDate
         );
         transaction.execute();
     }
@@ -71,9 +73,7 @@ public class ClassicAccount implements Account {
         Transaction transaction = new OpenLoan(
                 this,
                 loanAmount,
-                endDate,
-                rateOfInterest,
-                interestPeriod
+                endDate
         );
         transaction.execute();
     }
@@ -138,6 +138,14 @@ public class ClassicAccount implements Account {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public InterestMechanism getInterestMechanism() {
+        return interestMechanism;
+    }
+
+    public void setInterestMechanism(InterestMechanism interestMechanism) {
+        this.interestMechanism = interestMechanism;
     }
 
     // method created so that it may be overridden in DebitAccount and everything should work OK with the transactions.

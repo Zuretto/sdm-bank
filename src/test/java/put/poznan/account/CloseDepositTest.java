@@ -2,6 +2,7 @@ package put.poznan.account;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import put.poznan.interest.InterestMechanism;
 import put.poznan.transaction.Transaction;
 
 import java.math.BigDecimal;
@@ -22,11 +23,11 @@ class CloseDepositTest {
         BigDecimal mockedCalculatedInterest = new BigDecimal("350");
         BigDecimal expectedBalance = new BigDecimal("30350"); // beginning balance + deposit amount + calculated interest
 
-        InterestRate interestRate = Mockito.mock(InterestRate.class);
-        Mockito.when(interestRate.calculateInterest(mockedDepositAmount, mockedStartDate, mockedEndDate))
+        InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
+        Mockito.when(interestMechanism.calculateInterest(mockedDepositAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "");
-        Deposit deposit = new Deposit(interestRate, mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
+        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Deposit deposit = new Deposit(mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addDeposit(deposit);
         // when
@@ -51,11 +52,11 @@ class CloseDepositTest {
         BigDecimal mockedCalculatedInterest = new BigDecimal("350");
         BigDecimal expectedBalance = new BigDecimal("30000"); // beginning balance + deposit amount
 
-        InterestRate interestRate = Mockito.mock(InterestRate.class);
-        Mockito.when(interestRate.calculateInterest(mockedDepositAmount, mockedStartDate, mockedEndDate))
+        InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
+        Mockito.when(interestMechanism.calculateInterest(mockedDepositAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "");
-        Deposit deposit = new Deposit(interestRate, mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
+        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Deposit deposit = new Deposit(mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addDeposit(deposit);
         // when
