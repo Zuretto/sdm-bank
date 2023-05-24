@@ -28,7 +28,7 @@ class RepayLoanTest {
         InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
         Mockito.when(interestMechanism.calculateInterest(mockedLoanAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "");
         Loan loan = new Loan(mockedStartDate, mockedEndDate, mockedAccount, mockedLoanAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addLoan(loan);
@@ -56,7 +56,7 @@ class RepayLoanTest {
         InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
         Mockito.when(interestMechanism.calculateInterest(mockedLoanAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "");
         Loan loan = new Loan(mockedStartDate, mockedEndDate, mockedAccount, mockedLoanAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addLoan(loan);

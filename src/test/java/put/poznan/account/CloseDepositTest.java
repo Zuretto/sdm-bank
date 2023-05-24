@@ -26,8 +26,8 @@ class CloseDepositTest {
         InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
         Mockito.when(interestMechanism.calculateInterest(mockedDepositAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "", interestMechanism);
-        Deposit deposit = new Deposit(mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
+        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "");
+        Deposit deposit = new Deposit(interestRate, mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addDeposit(deposit);
         // when
@@ -55,7 +55,7 @@ class CloseDepositTest {
         InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
         Mockito.when(interestMechanism.calculateInterest(mockedDepositAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new ClassicAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "");
         Deposit deposit = new Deposit(mockedStartDate, mockedEndDate, mockedAccount, mockedDepositAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addDeposit(deposit);
