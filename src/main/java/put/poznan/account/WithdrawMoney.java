@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,16 @@ public class WithdrawMoney extends Transaction {
         super(account.getHistoryOfTransactions());
         this.account = account;
         this.withdrawAmount = withdrawAmount;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.WITHDRAW_MONEY;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("Transaction to withdraw money from account: %s with amount: %s", account, withdrawAmount);
     }
 
     /**

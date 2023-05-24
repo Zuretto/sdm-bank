@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 
@@ -13,6 +14,16 @@ public class RepayLoan extends Transaction {
         super(account.getHistoryOfTransactions());
         this.account = account;
         this.loan = loan;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.REPAY_LOAN;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("Transaction to repay loan %s for account %s", loan, account);
     }
 
     @Override

@@ -53,7 +53,7 @@ public interface Account {
 
     boolean hasFunds(BigDecimal moneyToBeWithdrawn);
 
-    String accept(Visitor visitor);
+    <T> T accept(Visitor<T> visitor);
 
     String getAccountNumber();
 

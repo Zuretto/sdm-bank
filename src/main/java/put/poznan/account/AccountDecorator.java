@@ -106,7 +106,7 @@ public class AccountDecorator implements Account {
     }
 
     @Override
-    public String accept(Visitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return wrappedAccount.accept(visitor);
     }
 

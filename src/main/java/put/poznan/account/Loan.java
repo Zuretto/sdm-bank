@@ -49,7 +49,7 @@ public class Loan {
         this.endDate = endDate;
     }
 
-    public String accept(Visitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitLoan(this);
     }
 }
