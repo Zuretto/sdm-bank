@@ -1,8 +1,10 @@
 package put.poznan.visitor;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import put.poznan.Bank;
 import put.poznan.account.*;
+import put.poznan.interest.InterestMechanism;
 import put.poznan.reporter.XMLReporter;
 import put.poznan.transaction.HistoryOfTransactions;
 
@@ -31,8 +33,8 @@ public class ReporterTest {
     @Test
     void singleAccountReceivePaymentsReportTest() {
         final var bank1 = new Bank("0001");
-        final var account1 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
-        final var account2 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account1 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
+        final var account2 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
@@ -95,8 +97,8 @@ public class ReporterTest {
     @Test
     void singleAccountMakePaymentsReportTest() {
         final var bank1 = new Bank("0001");
-        final var account1 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
-        final var account2 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId());
+        final var account1 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
+        final var account2 = new StandardAccount(new Person("test_name", "test_number", "test@test.com"), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
@@ -159,7 +161,7 @@ public class ReporterTest {
     void singleAccountReportTest() {
         XMLReporter reporter = new XMLReporter();
         Account account = new StandardAccount(
-                new Person("test_name", "test_number", "test@test.com"), "");
+                new Person("test_name", "test_number", "test@test.com"), "", Mockito.mock(InterestMechanism.class));
 
         account.setBalance(new BigDecimal(1000));
         account.openLoan(new BigDecimal(1000), LocalDate.now().plusYears(1), new BigDecimal(2111), 3);
@@ -196,10 +198,10 @@ public class ReporterTest {
         LocalDate today = LocalDate.now();
         LocalDate inOneYear = today.plusYears(1);
         Account account1 = new StandardAccount(
-                new Person("test_name1", "test_number1", "test1@test.com"), "");
+                new Person("test_name1", "test_number1", "test1@test.com"), "", Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal(2000));
         Account account2 = new StandardAccount(
-                new Person("test_name2", "test_number2", "test2@test.com"), "");
+                new Person("test_name2", "test_number2", "test2@test.com"), "", Mockito.mock(InterestMechanism.class));
         account2.setBalance(new BigDecimal(4000));
         account1.openDeposit(
                 new BigDecimal(1000),
@@ -271,13 +273,11 @@ public class ReporterTest {
         LocalDate today = LocalDate.now();
         LocalDate inOneYear = today.plusYears(1);
         Account account = new StandardAccount(
-                new Person("test_name1", "test_number1", "test1@test.com"), "");
+                new Person("test_name1", "test_number1", "test1@test.com"), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal(2000));
         new OpenDeposit(account,
                 new BigDecimal(200),
-                inOneYear,
-                new BigDecimal("0.01"),
-                12).execute();
+                inOneYear).execute();
         Deposit deposit = account.getDeposits().get(0);
         new CloseDeposit(
                 account,
@@ -291,7 +291,7 @@ public class ReporterTest {
                 <transactions>
                             <transaction>
                                 <transactionType>OPEN_DEPOSIT</transactionType>
-                                <description>Transaction to open deposit for account: %s, interest rate: %s, amount: 200 and end date: %s</description>
+                                <description>Transaction to open deposit for account: %s, amount: 200 and end date: %s</description>
                                 <dateOfExecution>%s</dateOfExecution>
                             </transaction>
                             <transaction>
@@ -301,7 +301,6 @@ public class ReporterTest {
                             </transaction>
                 </transactions>""",
                 account,
-                deposit.getInterestRate(),
                 inOneYear,
                 today,
                 deposit,

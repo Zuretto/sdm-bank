@@ -8,18 +8,14 @@ import java.time.LocalDate;
 
 public class OpenDeposit extends Transaction {
 
-    private final InterestRate interestRate;
     private final Account account;
     private final BigDecimal amountToBeDeposited;
     private final LocalDate endDate;
 
     public OpenDeposit(Account account,
                           BigDecimal amountToBeDeposited,
-                          LocalDate endDate,
-                          BigDecimal rateOfInterest,
-                          int interestPeriod) {
+                          LocalDate endDate) {
         super(account.getHistoryOfTransactions());
-        this.interestRate = new InterestRate(rateOfInterest, interestPeriod);
         this.account = account;
         this.amountToBeDeposited = amountToBeDeposited;
         this.endDate = endDate;
@@ -32,9 +28,8 @@ public class OpenDeposit extends Transaction {
 
     @Override
     public String getDescription() {
-        return String.format("Transaction to open deposit for account: %s, interest rate: %s, amount: %s and end date: %s",
+        return String.format("Transaction to open deposit for account: %s, amount: %s and end date: %s",
                 account,
-                interestRate,
                 amountToBeDeposited,
                 endDate);
     }
@@ -46,7 +41,7 @@ public class OpenDeposit extends Transaction {
         }
         final BigDecimal newAccountBalance = account.getBalance().subtract(amountToBeDeposited);
         account.setBalance(newAccountBalance);
-        Deposit deposit = new Deposit(interestRate, LocalDate.now(), endDate, account, amountToBeDeposited);
+        Deposit deposit = new Deposit(LocalDate.now(), endDate, account, amountToBeDeposited);
         account.addDeposit(deposit);
     }
 }

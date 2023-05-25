@@ -5,6 +5,7 @@ import org.mockito.Mockito;
 import put.poznan.Bank;
 import put.poznan.interbank.InterbankPaymentAgency;
 import put.poznan.interbank.PaymentStatus;
+import put.poznan.interest.InterestMechanism;
 import put.poznan.transaction.HistoryOfTransactions;
 
 import java.math.BigDecimal;
@@ -17,8 +18,8 @@ class MakePaymentTest {
     void shouldTransferMoneyInterBank() {
         final var bank1 = new Bank("0001");
         final var bank2 = new Bank("0002");
-        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank2.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank2.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank2.addAccount(account2);
@@ -58,8 +59,8 @@ class MakePaymentTest {
     void interbankShouldBePendingBeforeProcessingPayments() {
         final var bank1 = new Bank("0001");
         final var bank2 = new Bank("0002");
-        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank2.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank2.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank2.addAccount(account2);
@@ -83,8 +84,8 @@ class MakePaymentTest {
     @Test
     void shouldTransferMoneyInnerBank() {
         final var bank1 = new Bank("0001");
-        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
@@ -120,7 +121,7 @@ class MakePaymentTest {
     void whenWrongAccountNumberSetShouldSetInvalidAccountNumberStatus() {
         final var bank1 = new Bank("0001");
         final var bank2 = new Bank("0002");
-        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         final var interbankPaymentAgency = new InterbankPaymentAgency();
@@ -144,7 +145,7 @@ class MakePaymentTest {
     @Test
     void whenBankDoesNotExistShouldSetInvalidAccountNumberStatus() {
         final var bank1 = new Bank("0001");
-        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         final var interbankPaymentAgency = new InterbankPaymentAgency();
@@ -167,8 +168,8 @@ class MakePaymentTest {
     @Test
     void whenTransferAmountIsTooBigThenSetStatusTooInsufficientFund() {
         final var bank1 = new Bank("0001");
-        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId(), Mockito.mock(InterestMechanism.class));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
 

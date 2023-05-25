@@ -2,6 +2,7 @@ package put.poznan.account;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import put.poznan.interest.InterestMechanism;
 import put.poznan.transaction.FailedTransaction;
 import put.poznan.transaction.Transaction;
 
@@ -24,11 +25,11 @@ class RepayLoanTest {
         BigDecimal mockedCalculatedInterest = new BigDecimal("350");
         BigDecimal expectedBalance = new BigDecimal("9650"); // beginning balance - loan amount - calculated interest
 
-        InterestRate interestRate = Mockito.mock(InterestRate.class);
-        Mockito.when(interestRate.calculateInterest(mockedLoanAmount, mockedStartDate, mockedEndDate))
+        InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
+        Mockito.when(interestMechanism.calculateInterest(mockedLoanAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "");
-        Loan loan = new Loan(interestRate, mockedStartDate, mockedEndDate, mockedAccount, mockedLoanAmount);
+        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Loan loan = new Loan(mockedStartDate, mockedEndDate, mockedAccount, mockedLoanAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addLoan(loan);
         // when
@@ -52,11 +53,11 @@ class RepayLoanTest {
         BigDecimal mockedLoanAmount = new BigDecimal("10000");
         BigDecimal mockedCalculatedInterest = new BigDecimal("350");
 
-        InterestRate interestRate = Mockito.mock(InterestRate.class);
-        Mockito.when(interestRate.calculateInterest(mockedLoanAmount, mockedStartDate, mockedEndDate))
+        InterestMechanism interestMechanism = Mockito.mock(InterestMechanism.class);
+        Mockito.when(interestMechanism.calculateInterest(mockedLoanAmount, mockedStartDate, mockedEndDate))
                 .thenReturn(mockedCalculatedInterest);
-        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "");
-        Loan loan = new Loan(interestRate, mockedStartDate, mockedEndDate, mockedAccount, mockedLoanAmount);
+        Account mockedAccount = new StandardAccount(Mockito.mock(Person.class), "", interestMechanism);
+        Loan loan = new Loan(mockedStartDate, mockedEndDate, mockedAccount, mockedLoanAmount);
         mockedAccount.setBalance(mockedBeginningBalance);
         mockedAccount.addLoan(loan);
         // when

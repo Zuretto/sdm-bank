@@ -2,6 +2,7 @@ package put.poznan.account;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import put.poznan.interest.InterestMechanism;
 import put.poznan.transaction.FailedTransaction;
 import put.poznan.transaction.Transaction;
 
@@ -16,14 +17,12 @@ class OpenDepositTest {
     @Test
     void shouldOpenDeposit() {
         // given
-        Account account = new StandardAccount(Mockito.mock(Person.class), "");
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal("1000"));
         Transaction transaction = new OpenDeposit(
                 account,
                 new BigDecimal("100"),
-                LocalDate.of(2024, 12, 31),
-                new BigDecimal("0.02"),
-                3
+                LocalDate.of(2024, 12, 31)
         );
         // when
         transaction.execute();
@@ -36,25 +35,18 @@ class OpenDepositTest {
                         deposit -> assertThat(deposit.getAmount()).isEqualTo(new BigDecimal("100")),
                         deposit -> assertThat(deposit.getAccount()).isSameAs(account),
                         deposit -> assertThat(deposit.getStartDate()).isEqualTo(LocalDate.now()),
-                        deposit -> assertThat(deposit.getEndDate()).isEqualTo(LocalDate.of(2024, 12, 31)),
-                        deposit -> assertThat(deposit.getInterestRate())
-                                .satisfies(
-                                        interestRate -> assertThat(interestRate.getInterestPeriod())
-                                                .isEqualTo(3),
-                                        interestRate -> assertThat(interestRate.getInterestRate())
-                                                .isEqualTo(new BigDecimal("0.02"))));
+                        deposit -> assertThat(deposit.getEndDate()).isEqualTo(LocalDate.of(2024, 12, 31))
+                );
     }
 
     @Test
     void shouldNotOpenDeposit() {
-        Account account = new StandardAccount(Mockito.mock(Person.class), "");
+        Account account = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal("1000"));
         Transaction transaction = new OpenDeposit(
                 account,
                 new BigDecimal("1001"),
-                LocalDate.of(2024, 12, 31),
-                new BigDecimal("0.02"),
-                3
+                LocalDate.of(2024, 12, 31)
         );
 
         assertThrows(IllegalStateException.class, transaction::execute);

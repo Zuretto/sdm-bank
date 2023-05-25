@@ -8,18 +8,14 @@ import java.time.LocalDate;
 
 public class OpenLoan extends Transaction {
 
-    private final InterestRate interestRate;
     private final Account account;
     private final BigDecimal loanAmount;
     private final LocalDate endDate;
 
     public OpenLoan(Account account,
                     BigDecimal loanAmount,
-                    LocalDate endDate,
-                    BigDecimal rateOfInterest,
-                    int interestPeriod) {
+                    LocalDate endDate) {
         super(account.getHistoryOfTransactions());
-        this.interestRate = new InterestRate(rateOfInterest, interestPeriod);
         this.account = account;
         this.loanAmount = loanAmount;
         this.endDate = endDate;
@@ -33,8 +29,8 @@ public class OpenLoan extends Transaction {
     @Override
     public String getDescription() {
         return String.format(
-                "Transaction to open new loan fora account: %s with interest rate: %s, amount: %s and end date: %s",
-                account, interestRate, loanAmount, endDate
+                "Transaction to open new loan for an account: %s with amount: %s and end date: %s",
+                account, loanAmount, endDate
         );
     }
 
@@ -42,7 +38,7 @@ public class OpenLoan extends Transaction {
     protected void executeImplementation() {
         final BigDecimal newAccountBalance = account.getBalance().add(loanAmount);
         account.setBalance(newAccountBalance);
-        Loan loan = new Loan(interestRate, LocalDate.now(), endDate, account, loanAmount);
+        Loan loan = new Loan(LocalDate.now(), endDate, account, loanAmount);
         account.addLoan(loan);
     }
 }

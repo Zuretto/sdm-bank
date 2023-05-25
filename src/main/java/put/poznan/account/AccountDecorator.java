@@ -1,5 +1,6 @@
 package put.poznan.account;
 
+import put.poznan.interest.InterestMechanism;
 import put.poznan.reporter.Visitor;
 import put.poznan.transaction.HistoryOfTransactions;
 
@@ -112,5 +113,15 @@ public class AccountDecorator implements Account {
     @Override
     public String getAccountNumber() {
         return wrappedAccount.getAccountNumber();
+    }
+
+    @Override
+    public InterestMechanism getInterestMechanism() {
+        return wrappedAccount.getInterestMechanism();
+    }
+
+    @Override
+    public void setInterestMechanism(InterestMechanism interestMechanism) {
+        wrappedAccount.setInterestMechanism(interestMechanism);
     }
 }

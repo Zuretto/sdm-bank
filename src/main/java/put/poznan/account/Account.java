@@ -1,5 +1,6 @@
 package put.poznan.account;
 
+import put.poznan.interest.InterestMechanism;
 import put.poznan.reporter.Visitor;
 import put.poznan.transaction.HistoryOfTransactions;
 
@@ -55,4 +56,8 @@ public interface Account {
     <T> T accept(Visitor<T> visitor);
 
     String getAccountNumber();
+
+    InterestMechanism getInterestMechanism();
+
+    void setInterestMechanism(InterestMechanism interestMechanism);
 }

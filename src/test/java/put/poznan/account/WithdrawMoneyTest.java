@@ -2,6 +2,7 @@ package put.poznan.account;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import put.poznan.interest.InterestMechanism;
 import put.poznan.transaction.FailedTransaction;
 import put.poznan.transaction.Transaction;
 
@@ -15,7 +16,7 @@ class WithdrawMoneyTest {
     @Test
     void shouldWithdrawMoney() {
         // given
-        StandardAccount account = new StandardAccount(Mockito.mock(Person.class), "");
+        StandardAccount account = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("99"));
         // when
@@ -29,7 +30,7 @@ class WithdrawMoneyTest {
 
     @Test
     void shouldWithdrawMoneyDebitAccount() {
-        Account account = new DebitAccount(new StandardAccount(Mockito.mock(Person.class), ""));
+        Account account = new DebitAccount(new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class)));
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("101"));
 
@@ -44,7 +45,7 @@ class WithdrawMoneyTest {
     @Test
     void shouldNotWithdrawMoney() {
         // given
-        StandardAccount account = new StandardAccount(Mockito.mock(Person.class), "");
+        StandardAccount account = new StandardAccount(Mockito.mock(Person.class), "", Mockito.mock(InterestMechanism.class));
         account.setBalance(new BigDecimal("100"));
         Transaction transaction = new WithdrawMoney(account, new BigDecimal("101"));
         // when
