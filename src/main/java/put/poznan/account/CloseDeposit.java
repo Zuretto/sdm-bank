@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,6 +16,16 @@ public class CloseDeposit extends Transaction {
         super(account.getHistoryOfTransactions());
         this.account = account;
         this.deposit = deposit;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.CLOSE_DEPOSIT;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("Transaction to close deposit. Deposit: %s, account: %s", deposit, account);
     }
 
     @Override

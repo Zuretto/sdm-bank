@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,6 +23,19 @@ public class OpenLoan extends Transaction {
         this.account = account;
         this.loanAmount = loanAmount;
         this.endDate = endDate;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.OPEN_LOAN;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format(
+                "Transaction to open new loan fora account: %s with interest rate: %s, amount: %s and end date: %s",
+                account, interestRate, loanAmount, endDate
+        );
     }
 
     @Override

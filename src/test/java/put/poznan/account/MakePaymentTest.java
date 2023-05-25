@@ -17,8 +17,8 @@ class MakePaymentTest {
     void shouldTransferMoneyInterBank() {
         final var bank1 = new Bank("0001");
         final var bank2 = new Bank("0002");
-        final var account1 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new ClassicAccount(Mockito.mock(Person.class), bank2.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank2.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank2.addAccount(account2);
@@ -58,8 +58,8 @@ class MakePaymentTest {
     void interbankShouldBePendingBeforeProcessingPayments() {
         final var bank1 = new Bank("0001");
         final var bank2 = new Bank("0002");
-        final var account1 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new ClassicAccount(Mockito.mock(Person.class), bank2.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank2.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank2.addAccount(account2);
@@ -83,8 +83,8 @@ class MakePaymentTest {
     @Test
     void shouldTransferMoneyInnerBank() {
         final var bank1 = new Bank("0001");
-        final var account1 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         bank1.addAccount(account2);
@@ -120,7 +120,7 @@ class MakePaymentTest {
     void whenWrongAccountNumberSetShouldSetInvalidAccountNumberStatus() {
         final var bank1 = new Bank("0001");
         final var bank2 = new Bank("0002");
-        final var account1 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         final var interbankPaymentAgency = new InterbankPaymentAgency();
@@ -144,7 +144,7 @@ class MakePaymentTest {
     @Test
     void whenBankDoesNotExistShouldSetInvalidAccountNumberStatus() {
         final var bank1 = new Bank("0001");
-        final var account1 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
         account1.setBalance(new BigDecimal("100"));
         bank1.addAccount(account1);
         final var interbankPaymentAgency = new InterbankPaymentAgency();
@@ -167,8 +167,8 @@ class MakePaymentTest {
     @Test
     void whenTransferAmountIsTooBigThenSetStatusTooInsufficientFund() {
         final var bank1 = new Bank("0001");
-        final var account1 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
-        final var account2 = new ClassicAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account1 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
+        final var account2 = new StandardAccount(Mockito.mock(Person.class), bank1.getNextId());
         bank1.addAccount(account1);
         bank1.addAccount(account2);
 

@@ -1,6 +1,7 @@
 package put.poznan.account;
 
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 public class ChangeInterestRate {
 
@@ -27,6 +28,17 @@ public class ChangeInterestRate {
         }
 
         @Override
+        public TransactionType getTransactionType() {
+            return TransactionType.CHANGE_DEPOSIT_INTEREST_RATE;
+        }
+
+        @Override
+        public String getDescription() {
+            return String.format("Transaction to change deposit interest rate. Deposit: %s, new interest rate: %s",
+                    deposit, newInterestRate);
+        }
+
+        @Override
         protected void executeImplementation() {
             deposit.setInterestRate(newInterestRate);
         }
@@ -41,6 +53,17 @@ public class ChangeInterestRate {
             super(loan.getHistoryOfTransactions());
             this.loan = loan;
             this.newInterestRate = newInterestRate;
+        }
+
+        @Override
+        public TransactionType getTransactionType() {
+            return TransactionType.CHANGE_LOAN_INTEREST_RATE;
+        }
+
+        @Override
+        public String getDescription() {
+            return String.format("Transaction to change loan interest rate. Deposit: %s, new interest rate: %s",
+                    loan, newInterestRate);
         }
 
         @Override

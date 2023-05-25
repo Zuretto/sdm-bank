@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ClassicAccount implements Account {
+public class StandardAccount implements Account {
 
     private final HistoryOfTransactions historyOfTransactions = new HistoryOfTransactions();
 
@@ -21,7 +21,7 @@ public class ClassicAccount implements Account {
     private final String accountNumber;
 
 
-    public ClassicAccount(Person person, String accountNumber) {
+    public StandardAccount(Person person, String accountNumber) {
         this.person = person;
         this.accountNumber = accountNumber;
         this.balance = new BigDecimal(0);
@@ -59,10 +59,10 @@ public class ClassicAccount implements Account {
     /**
      * Opening a loan adds money to the balance.
      *
-     * @param loanAmount amount that is to be loaned
-     * @param endDate             end date of the deposit
-     * @param rateOfInterest      interest rate of the deposit
-     * @param interestPeriod      interest period of the deposit
+     * @param loanAmount     amount that is to be loaned
+     * @param endDate        end date of the deposit
+     * @param rateOfInterest interest rate of the deposit
+     * @param interestPeriod interest period of the deposit
      */
     public void openLoan(BigDecimal loanAmount,
                          LocalDate endDate,
@@ -80,6 +80,7 @@ public class ClassicAccount implements Account {
 
     /**
      * Closes given deposit.
+     *
      * @param deposit deposit to be closed.
      */
     public void closeDeposit(Deposit deposit) {
@@ -89,6 +90,7 @@ public class ClassicAccount implements Account {
 
     /**
      * Repays loan.
+     *
      * @param loan loan to be repaid.
      */
     public void repayLoan(Loan loan) {
@@ -145,7 +147,7 @@ public class ClassicAccount implements Account {
         return balance.compareTo(moneyToBeWithdrawn) >= 0;
     }
 
-    public String accept(Visitor visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitAccount(this);
     }
 

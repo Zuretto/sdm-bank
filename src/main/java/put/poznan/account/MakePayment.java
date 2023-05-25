@@ -4,8 +4,8 @@ import put.poznan.Bank;
 import put.poznan.interbank.InterBankPayment;
 import put.poznan.interbank.InterbankPaymentAgency;
 import put.poznan.interbank.PaymentStatus;
-import put.poznan.reporter.Visitor;
 import put.poznan.transaction.Transaction;
+import put.poznan.transaction.TransactionType;
 
 import java.math.BigDecimal;
 
@@ -40,6 +40,19 @@ public class MakePayment extends Transaction {
         this.amount = amount;
         this.receiverAccountNumber = receiverAccountNumber;
         this.interbankPaymentAgency = interbankPaymentAgency;
+    }
+
+    @Override
+    public TransactionType getTransactionType() {
+        return TransactionType.MAKE_PAYMENT;
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("Transaction to make payment from sender: %s to receiver: %s with amount: %s",
+                senderAccount,
+                receiverAccountNumber,
+                amount);
     }
 
     @Override
@@ -94,9 +107,5 @@ public class MakePayment extends Transaction {
                         },
                         () -> status = PaymentStatus.ACCOUNT_NOT_FOUND
                 );
-    }
-
-    public String accept(Visitor visitor) {
-        return visitor.visitMakePayment(this);
     }
 }
